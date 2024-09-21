@@ -1,0 +1,43 @@
+
+UPDATED NEEDED.
+
+***use choiseType Enum in model and serializer. (Currently throwing error: type )
+***Update Company need to send update asa an array and not indiviayally as a varriable. (check : views,py>companies>post )
+
+Company 
+    a. Edit : only folks with authority can edit specific parts of company info.
+    b. delete : check if requester is authorized to delete company. On ocmpany delete need to delete other company related rows in other database table? 
+    c. add
+
+models : FishGroup, Buyer/Vendor Id, 
+
+   dateSold
+   amount
+   unitPrice
+   fishId
+   buyerId
+   paid 
+   paymentBal
+   projectId
+   pondId
+
+
+
+if request.method == 'PUT':
+        if Ponds.objects.filter(id=data["pondId"], projectId=data["projectId"]):
+            checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["projectId"])
+            if checkIfAuthorized:
+                #***need to update request.data here before sending too be serialized
+                PondTodo_Serializers = PondstoDoListSerializers(data=data)
+                if PondTodo_Serializers.is_valid():
+                    PondTodo_Serializers.save()
+                    msg = {"msg" : "Task Has been sucessfully added ", "data" : PondTodo_Serializers.data}
+                    return JsonResponse(msg)
+                else:
+                    return JsonResponse(PondTodo_Serializers.errors, status=status.HTTP_400_BAD_REQUEST)   
+            else:
+                msg = {"msg" : "You are not authorized"}
+                return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        else:
+            msg = {"msg" : "Pond dosen't exisit in Farm slected, select a pond and try again"}
+            return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)
