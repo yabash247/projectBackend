@@ -544,9 +544,9 @@ def PondToDo(request):
             msg = {"msg" : "Pond dosen't exisit in Farm slected, select a pond and try again"}
             return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)
         
-    elif request.method == 'GET':
-        if Project.objects.filter(creatorId=user.id, id=data["projectId"]):
-            taskList = PondstoDoList.objects.filter(projectId=data["projectId"], status=3).order_by('id')
+    elif request.method == 'POST':
+        if Project.objects.filter(creatorId=user.id, id=data["farmId"]):
+            taskList = PondstoDoList.objects.filter(farmId=data["farmId"], status=3).order_by('id')
             if taskList:
                 taskList_Serializers = PondstoDoListSerializers(taskList, many=True)
                 msg = {"msg" : "All Projects I Cretated", "data" : taskList_Serializers.data}
@@ -561,7 +561,7 @@ def PondToDo(request):
     elif request.method == 'DELETE':
         try:
             obj = PondstoDoList.objects.get(id=data["id"])
-            if Project.objects.filter(creatorId=user.id, id=data["projectId"]):
+            if Project.objects.filter(creatorId=user.id, id=data["farmId"]):
                 obj.delete()
                 msg = {"msg" : "Task deleted"}
                 return Response(msg)
@@ -571,6 +571,24 @@ def PondToDo(request):
         except Company.DoesNotExist:
             msg = {"msg" : "Something went wrong"}
             return Response(msg, status= status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def ActivityNameById(request):
+    user = request.user 
+    data = JSONParser().parse(request)
+
+    if request.method == 'POST':
+        activityN = activityNames.objects.filter(id=data["taskId"])
+        if activityN:
+            activityNames_Serializers = activityNameIdSerializers(activityN, many=True)
+            msg = {"msg" : "All Projects I Cretated", "data" : activityNames_Serializers.data}
+            return JsonResponse(msg, status=status.HTTP_200_OK)
+        else:
+            msg = {"msg" : "Activity  Do Not Exist"}
+            return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)
+    
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -607,7 +625,7 @@ def ActivityName(request):
             else:
                 return JsonResponse(activityNames_Serializers.errors, status=status.HTTP_400_BAD_REQUEST)  
             
-    elif request.method == 'GET':
+    elif request.method == 'POST':
 
         activityN = activityNames.objects.all().order_by('id')
         if activityN:

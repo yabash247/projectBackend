@@ -6,6 +6,7 @@ urlpatterns = [
     path('myProjects/', views.Projects, name='Projects'),
     path('Company/', views.Companies, name='Company'),
     path('activityNames/', views.ActivityName, name='activityNames'),
+    path('ActivityNameById/', views.ActivityNameById, name='ActivityNameById'),
     path('Ponds/', views.Pond, name='Ponds'),
     path('fishSource/', views.fishSource, name='fishSource'),
     path('Stocks/', views.Stocks, name='Stocks'),
@@ -18,3 +19,4 @@ urlpatterns = [
     path('test/', views.test.as_view(), name='test'),
     path('', views.getRoutes),
 ]
+

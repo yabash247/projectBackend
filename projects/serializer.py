@@ -91,8 +91,6 @@ class GetStockingSerializers(serializers.ModelSerializer):
         )         
 
 
-        
-
 class PondstoDoListSerializers(serializers.ModelSerializer):
     class Meta:
         model = PondstoDoList
