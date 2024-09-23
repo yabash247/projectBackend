@@ -21,7 +21,28 @@ class Company(models.Model):
     zipCode =  models.IntegerField()
     comments = models.CharField(max_length=1000)
 
+class contacts(models.Model):
+    userId = models.IntegerField(null=True)
+    firstName = models.CharField(max_length=100, null=True)
+    lastName = models.CharField(max_length=100, null=True)
+    creatorId =  models.IntegerField(null=True)
+    phoneOne =  models.IntegerField(null=True)
+    phoneTwo =  models.IntegerField(null=True)
+    emailOne = models.EmailField(max_length=254, null=True)
+    emailTwo = models.EmailField(max_length=254, null=True)
+    instagram = models.CharField(max_length=100, null=True)
+    facebook = models.CharField(max_length=100, null=True)
+    status = models.IntegerField(null=True)
+    Address = models.CharField(max_length=1000, null=True)
+    comments = models.CharField(max_length=1000, null=True)
 
+#bankInfo
+    #link by contacts id
+#kinInfo
+    #link by parent to child id
+
+
+    
 #branch of a company. such as a farm
 class Project(models.Model):
     name = models.CharField(max_length=100)
@@ -58,7 +79,6 @@ class MyProjects(models.Model):
     levels = models.CharField(max_length=100)
     position = models.CharField(max_length=100)
 
-
 class Ponds(models.Model):
     name = models.CharField(max_length=100)
     projectId = models.IntegerField()
@@ -76,7 +96,6 @@ class stockSource(models.Model):
     farmId = models.IntegerField()
     vendorId = models.IntegerField()
     #add image
-
 
 class feeding(models.Model):
     pondId = models.IntegerField()
@@ -100,7 +119,6 @@ class WaterChange(models.Model):
     preWaterColor = models.CharField(max_length=100)
     preWaterCond = models.CharField(max_length=600)
 
-
 class PondstoDoList(models.Model):
     pondId = models.IntegerField()
     farmId = models.IntegerField()
@@ -118,7 +136,6 @@ class PondstoDoList(models.Model):
     requestorId = models.IntegerField()
     assignedToId = models.IntegerField(null=True)
     taskDetails = models.CharField(max_length=1000)
-
 
 class Stocking(models.Model):
     pondId = models.IntegerField()
@@ -171,7 +188,6 @@ class activityNames(models.Model):
     creatorId = models.IntegerField()
     #dateCreated = models.DateTimeField(default=datetime.now)
     
-
 class followupTaskSuggestion(models.Model):
     activityNamesId = models.IntegerField()
     followupNameId = models.IntegerField()   
@@ -209,5 +225,55 @@ class Staff(models.Model):
     comments = models.CharField(max_length=1000, null=True)
 
 
+class Expense(models.Model):
+    farmId = models.IntegerField()
+    ItemsGroupId = models.IntegerField()
+    itemDescription = models.CharField(max_length=500)
+    unitCost = models.IntegerField(null=True)
+    quantity = models.IntegerField(null=True)
+    deliveryCost = models.IntegerField(null=True)
+    totalcost = models.IntegerField()
+    expensesDate = models.DateTimeField()
+    paymentToId = models.IntegerField(null=True)
+    shopId = models.IntegerField(null=True)
+    comments = models.CharField(max_length=1000, null=True)
 
+
+class ItemsGroup(models.Model):
+    name = models.CharField(max_length=100)
+    desc = models.CharField(max_length=1000)
+    comments = models.CharField(max_length=1000, null=True)
+
+class ExpensesDisbursement(models.Model):
+    expenseId = models.IntegerField()
+    sharePecentage = models.IntegerField()
+    allocatedToId = models.IntegerField()
+    ItemsGroupId = models.IntegerField()
+    cost = models.IntegerField()
+
+
+# class Security(models.Model):
+#     name = models.IntegerField(null=True)
+
+# class Survelance(models.Model):
+#     name = models.IntegerField(null=True)
+
+# class shops(models.Model):
+#     name = models.IntegerField(null=True)
+
+
+# class chartData(models.Model):
+#     nameId = models.IntegerField(null=True)
+#     actual = models.IntegerField(null=True)
+#     planed = models.IntegerField(null=True)
+#     recordeDate = models.DateTimeField(null=True)
+
+# class chartDataLink(models.Model):
+#     nameId = models.IntegerField()
+#     parentId = models.IntegerField()
+
+# class chartDataDescription(models.Model):
+#     name = models.CharField(max_length=100, null=True)
+#     description = models.CharField(max_length=1000, null=True)
+#     creatorId = models.IntegerField()
 

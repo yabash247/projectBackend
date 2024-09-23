@@ -12,11 +12,18 @@ urlpatterns = [
     path('Stocks/', views.Stocks, name='Stocks'),
     path('Ponds/todo/', views.PondToDo, name='Ponds'),
     path('myPondsToDo/', views.myPondsToDo, name='myPondsToDo'),
+
+    path('Spends/', views.Spends, name='Spends'),
+    path('SpendsDisbursement/', views.SpendsDisbursement, name='SpendsDisbursement'),
+
     path('Fish/Sales/', views.Sale, name='Sales'),
     path('Stockings/', views.Stockings, name='Stockings'),
     path('Staff/', views.StaffData, name='Staff'),
     path('Project/', views.Projec, name='project'),
     path('test/', views.test.as_view(), name='test'),
     path('', views.getRoutes),
+
+    path('ItemsGroup/', views.ItemsGrouping, name='ItemsGroup'),
+
 ]
 

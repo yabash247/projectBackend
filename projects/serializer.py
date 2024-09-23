@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Project, MyProjects, Company, Ponds, Stocking, PondstoDoList, Sales, activityNames, stockSource
-from .models import Staff
+from .models import Staff, Expense, ItemsGroup, ExpensesDisbursement
 
 
 class ProjectsTemplates(serializers.ModelSerializer):
@@ -14,14 +14,11 @@ class StocSerializers(serializers.ModelSerializer):
         fields = ('toPondId')
          #{"farmId":6,"toPondId":9,"fromPondId":8,"fishStage":"Fingerlings","fishId":2,"addedQuantity":66,"addedWeight":666,"comments":"ghgtfh"}:    
 
-
 class MyProjectsTemplates(serializers.ModelSerializer):
     class Meta:
         model = MyProjects
         fields = ( 'id', 'projectId', 'levels', 'addedby_Id', 'position')
         
-        
-
 class CompanySerializersGet(serializers.ModelSerializer):
     class Meta:
         model = Company
@@ -29,9 +26,7 @@ class CompanySerializersGet(serializers.ModelSerializer):
             'id', 'name', 'creatorId', 
             'contactName', 'contactEmail', 'Address', 'status', 
             )
-        
-
-
+    
 class CompanySerializersPost(serializers.ModelSerializer):
     class Meta:
         model = Company
@@ -48,8 +43,7 @@ class CompanySerializersPost(serializers.ModelSerializer):
             'Country',
             'zipCode',
             'comments',
-            )
-        
+            )       
 
 class PondSerializers(serializers.ModelSerializer):
     class Meta:
@@ -58,16 +52,6 @@ class PondSerializers(serializers.ModelSerializer):
             'id','name', 'projectId', 'position_row', 'width',
             'position_col', 'materialType', 'depth', 'lenght', 
             )
-        
-
-
-# class StockingSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Stocking
-#         fields = ( 
-#             'id','pondId','toPondId','waterLevel', 'type', 'totalWeight', 'quantity',
-#             'recordDate', 'fishId', 'leadByName', 'followupTask', 'status', 'removed', 'addedQuantity', 'addedWeight','comments'
-#             )
 
 class StockingSerializers(serializers.ModelSerializer):
     class Meta:
@@ -89,7 +73,6 @@ class GetStockingSerializers(serializers.ModelSerializer):
             'addedWeight',
             'fishId',
         )         
-
 
 class PondstoDoListSerializers(serializers.ModelSerializer):
     class Meta:
@@ -114,6 +97,7 @@ class activityNamesSerializers(serializers.ModelSerializer):
             'name',
             'description'
             )
+
 class createActivityNameSerializers(serializers.ModelSerializer):
     class Meta:
         model = activityNames
@@ -133,7 +117,6 @@ class activityNameIdSerializers(serializers.ModelSerializer):
             'id'
             ) 
 
-
 class stockSourceSerializers(serializers.ModelSerializer):
     class Meta:
         model = stockSource
@@ -145,8 +128,6 @@ class stockSourceSerializers(serializers.ModelSerializer):
             'vendorId',
             'id'
         )         
-   
-
 
 class staffSerializers(serializers.ModelSerializer):
     class Meta:
@@ -169,3 +150,28 @@ class staffSerializers(serializers.ModelSerializer):
             'comments',
             'status'
         )   
+
+class ItemsGroupSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = ItemsGroup
+        fields = ( 
+            'id','name','desc', 
+            'comments'
+        )
+
+class EspensesSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Expense
+        fields = ( 
+            'farmId','ItemsGroupId','itemDescription', 'unitCost', 'quantity', 'deliveryCost',
+            'totalcost','comments','expensesDate', 'paymentToId','shopId', 'id'
+        )
+
+class ExpensesDisbursementSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = ExpensesDisbursement
+        fields = ( 
+            'expenseId','sharePecentage','cost',
+            'allocatedToId','ItemsGroupId', 'id'
+        )
+

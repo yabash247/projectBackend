@@ -2,12 +2,11 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from django.http import HttpResponse
 from users.models import User
-from .models import Project, MyProjects, Company, Ponds, Stocking, PondstoDoList, Sales, activityNames, stockSource, Staff
+from .models import Project, MyProjects, Company, Ponds, Stocking, PondstoDoList, Sales, activityNames, stockSource, Staff, ItemsGroup, Expense, ExpensesDisbursement
 
 from projects.serializer import ProjectsTemplates, MyProjectsTemplates, CompanySerializersGet, CompanySerializersPost, PondSerializers, stockSourceSerializers, GetStockingSerializers
 from projects.serializer import StockingSerializers, PondstoDoListSerializers, SaleSerializers, activityNamesSerializers, createActivityNameSerializers, activityNameIdSerializers
-from projects.serializer import staffSerializers, StocSerializers
-
+from projects.serializer import staffSerializers, ItemsGroupSerializers, EspensesSerializers, ExpensesDisbursementSerializers
 
 from rest_framework import status, permissions
 from rest_framework.views import APIView
@@ -716,7 +715,7 @@ def Stocks(request):
 
     if request.method == 'PUT':
         if Ponds.objects.filter(id=data["pondId"], projectId=data["farmId"]):
-            checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["projectId"])
+            checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["farmId"])
             if checkIfAuthorized:
                 #***need to update request.data here before sending too be serialized
                 PondTodo_Serializers = PondstoDoListSerializers(data=data)
@@ -734,3 +733,205 @@ def Stocks(request):
             return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def Spends(request):
+    user = request.user
+
+    if request.method == 'PUT':
+        data = JSONParser().parse(request)
+        Espenses_Serializers = EspensesSerializers(data=data)
+        if Espenses_Serializers.is_valid():
+            checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["farmId"])
+            if checkIfAuthorized:
+                Espenses_Serializers.save()
+                msg = {"msg" : "item group Has been sucessfully added ", "data" : Espenses_Serializers.data}
+                return JsonResponse(msg)
+            else:
+                msg = {"msg" : "You are not authorized"}
+                return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        else:
+            return JsonResponse(Espenses_Serializers.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+    
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["farmId"])
+        
+        if checkIfAuthorized:
+            if (data["id"] > 0):
+                expenseData = Expense.objects.filter(id=data["id"]).order_by('id').reverse()
+                if expenseData:
+                    expense_Serializers = EspensesSerializers(expenseData, many=True)
+                    msg = {"msg" : "item group Has been sucessfully added ", "data" : expense_Serializers.data}
+                    return JsonResponse(msg)
+            else:
+                expenseData = Expense.objects.all().order_by('id')
+                if expenseData:
+                    expense_Serializers = EspensesSerializers(expenseData, many=True)
+                    msg = {"msg" : "item group Has been sucessfully added ", "data" : expense_Serializers.data}
+                    return JsonResponse(msg)
+                else:
+                    msg = {"msg" : "No item group exsits"}
+                return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)    
+        else:
+            msg = {"msg" : "You are not authorized"}
+            return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+    elif request.method == 'DELETE':
+        data = JSONParser().parse(request)
+        checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["farmId"])
+        if (checkIfAuthorized):
+            try:
+                obj = Expense.objects.get(id=data["id"])
+                if obj:
+                    obj.delete()
+                    msg = {"msg" : "Item Group has been deleted"}
+                    return Response(msg)
+                else:
+                    msg = {"msg" : "You are not authorized"}
+                    return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            except:
+                msg = {"msg" : "Something went wrong"}
+                return Response(msg, status= status.HTTP_404_NOT_FOUND)
+        else:
+            msg = {"msg" : "You are not authorized"}
+            return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def SpendsDisbursement(request):
+    user = request.user
+
+    if request.method == 'PUT':
+        data = JSONParser().parse(request)
+        ED_Serializers = ExpensesDisbursementSerializers(data=data)
+        if ED_Serializers.is_valid():
+            checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["farmId"])
+            if checkIfAuthorized:
+                ED_Serializers.save()
+                msg = {"msg" : "item group Has been sucessfully added ", "data" : ED_Serializers.data}
+                return JsonResponse(msg)
+            else:
+                msg = {"msg" : "You are not authorized"}
+                return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        
+        else:
+            return JsonResponse(ED_Serializers.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+    #Gets disburtment by disbursement id
+    elif request.method == 'POST':
+        #datatype : 1=byId, 2=byexpenseId, 3=byallocatedToId
+        data = JSONParser().parse(request)
+        checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["farmId"])
+        if checkIfAuthorized:
+    
+
+            if(data["dataType"] == 1 & data["id"] > 0):
+                expenseData = ExpensesDisbursement.objects.filter(id=data["id"]).order_by('id').reverse()
+
+            elif(data["dataType"] == 2 and data["id"] > 0):
+                expenseData = ExpensesDisbursement.objects.filter(expenseId=data["id"]).order_by('id').reverse()
+
+            elif(data["dataType"] == 3 and data["id"] > 0):
+                expenseData = ExpensesDisbursement.objects.filter(allocatedToId=data["id"]).order_by('id').reverse()
+                
+            elif(data["id"] == 0):
+                expenseData = ExpensesDisbursement.objects.all().order_by('id')
+
+            if expenseData:
+                expense_Serializers = ExpensesDisbursementSerializers(expenseData, many=True)
+                msg = {"msg" : "item group Has been sucessfully added ", "data" : expense_Serializers.data}
+                return JsonResponse(msg)
+            else:
+                msg = {"msg" : "Wrong data sent"}
+                return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)    
+            
+        else:
+            msg = {"msg" : "You are not authorized"}
+            return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+
+    ''' 
+    #Gets disburtment by disbursement id
+    elif request.method == 'POST':
+        #datatype : 1=byId, 2=byexpenseId, 3=byallocatedToId
+        data = JSONParser().parse(request)
+        checkIfAuthorized = Project.objects.filter(creatorId=user.id, id=data["farmId"])
+        if checkIfAuthorized:
+            if (data["id"] > 0):
+                expenseData = ExpensesDisbursement.objects.filter(id=data["id"]).order_by('id').reverse()
+                if expenseData:
+                    expense_Serializers = ExpensesDisbursementSerializers(expenseData, many=True)
+                    msg = {"msg" : "item group Has been sucessfully added ", "data" : expense_Serializers.data}
+                    return JsonResponse(msg)
+            else:
+                expenseData = ExpensesDisbursement.objects.all().order_by('id')
+                if expenseData:
+                    expense_Serializers = ExpensesDisbursementSerializers(expenseData, many=True)
+                    msg = {"msg" : "item group Has been sucessfully added ", "data" : expense_Serializers.data}
+                    return JsonResponse(msg)
+                else:
+                    msg = {"msg" : "No item group exsits"}
+                return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)    
+        else:
+            msg = {"msg" : "You are not authorized"}
+            return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+    ''' 
+
+
+
+
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def ItemsGrouping(request):
+    user = request.user
+    
+    if request.method == 'PUT':
+        data = JSONParser().parse(request)
+        if (user.id == 2):
+            IG_Serializers = ItemsGroupSerializers(data=data)
+            if IG_Serializers.is_valid():
+                IG_Serializers.save()
+                msg = {"msg" : "item group Has been sucessfully added ", "data" : IG_Serializers.data}
+                return JsonResponse(msg)
+            else:
+                return JsonResponse(IG_Serializers.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            msg = {"msg" : "You are not authorized"}
+            return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        
+    elif request.method == 'POST':
+        IG_N = ItemsGroup.objects.all().order_by('id')
+        if IG_N:
+            IG_Serializers = ItemsGroupSerializers(IG_N, many=True)
+            msg = {"msg" : "All Items Group", "data" : IG_Serializers.data}
+            return JsonResponse(msg, status=status.HTTP_200_OK)
+        else:
+            msg = {"msg" : "No item group exsits"}
+            return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)
+        
+    elif request.method == 'DELETE':
+        data = JSONParser().parse(request)
+        if (user.id == 2):
+            try:
+                obj = ItemsGroup.objects.get(id=data["id"])
+                if obj:
+                    obj.delete()
+                    msg = {"msg" : "Item Group has been deleted"}
+                    return Response(msg)
+                else:
+                    msg = {"msg" : "You are not authorized"}
+                    return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            except:
+                msg = {"msg" : "Something went wrong"}
+                return Response(msg, status= status.HTTP_404_NOT_FOUND)
+        else:
+            msg = {"msg" : "You are not authorized"}
+            return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+    
+
+    
