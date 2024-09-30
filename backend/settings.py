@@ -1,4 +1,4 @@
-
+import os
 
 from pathlib import Path
 from datetime import timedelta
@@ -18,8 +18,10 @@ SECRET_KEY = 'django-insecure-#&cr6nm2v%#5sq^n@yx-jd=u86(hk!cu+s8x5o3hz$lw4s-f-8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yabash.pythonanywhere.com', 'localhost']
 CORS_ALLOWED_ORIGINS = [
+    'https://frontend-eight-wheat-85.vercel.app',
+    'https://frontend-i2hcwynk4-yabashs-projects.vercel.app',
     'http://localhost:8081',  # Replace with your frontend URL
     'http://127.0.0.1:8080',   # Example with localhost IP
 ]
@@ -85,12 +87,8 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'projects',
-        'USER': 'root',
-        'PASSWORD': 'yabash247365',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -184,6 +182,7 @@ LOGOUT_REDIRECT_URL = '/'
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
