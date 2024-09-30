@@ -113,7 +113,7 @@ def dashboard(request):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def UserProfile(request):
     user = request.user
 
@@ -130,21 +130,24 @@ def UserProfile(request):
 
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        Profile_Serializers = ProfileEditSerializers(data=data)
+        Profile_Serializers = ProfileEditSerializers(user, data=request.data, partial=True)
         if Profile_Serializers.is_valid():
             try:
+                # Get the existing profile
                 obj = Profile.objects.get(id=user.id)
-                for field, value in data.items():
+                
+                # Update the fields dynamically from request.data
+                for field, value in request.data.items():
                     if hasattr(obj, field) and value is not None:
                         setattr(obj, field, value)
-                obj.save()
-                msg = {"msg" : "Your profile has been updated!"}
+
+                obj.save()  # Save the profile
+                msg = {"msg": "Your profile has been updated!"}
                 return Response(msg)
-                    
+
             except Profile.DoesNotExist:
-                msg = {"msg" : "Your profile is ready for viewing"}
-                return Response(msg, status= status.HTTP_404_NOT_FOUND)
+                msg = {"msg": "Wow thats Strange!!!, profile not found. Please refresh page and try again"}
+                return Response(msg, status=status.HTTP_404_NOT_FOUND)
 
         else: 
             return JsonResponse(Profile_Serializers.errors, status=status.HTTP_400_BAD_REQUEST)
