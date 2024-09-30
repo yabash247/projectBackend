@@ -41,3 +41,36 @@ if request.method == 'PUT':
         else:
             msg = {"msg" : "Pond dosen't exisit in Farm slected, select a pond and try again"}
             return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+Expenses 
+    Dog Feeds
+
+
+
+    espenseID 
+    itemId
+
+
+    itemGrouping 
+        itemId,             itemParent 
+
+        FishPurchase        
+
+item
+
+
+Expense table (Like MRF) <> Expense Link Table <> item Table (PO details)
+
+    *Expense Link Table to also include deliveryId
+
+Espenses > cost Of 2mm given too fishId 3
+
+
+
+
+Sharp Sand - NGN105,000 - 4BUCKETS @15K per bucket - truck transport 45k, setllement - 5k, going transport 2k  - 9/27/2024
+

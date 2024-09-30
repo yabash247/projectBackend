@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Project, MyProjects, Company, Ponds, Stocking, PondstoDoList, Sales, activityNames, stockSource
-from .models import Staff, Expense, ItemsGroup, ExpensesDisbursement
+from .models import Staff, Expense, Items, ExpensesDisbursement
 
 
 class ProjectsTemplates(serializers.ModelSerializer):
@@ -151,9 +151,9 @@ class staffSerializers(serializers.ModelSerializer):
             'status'
         )   
 
-class ItemsGroupSerializers(serializers.ModelSerializer):
+class ItemsSerializers(serializers.ModelSerializer):
     class Meta:
-        model = ItemsGroup
+        model = Items
         fields = ( 
             'id','name','desc', 
             'comments'
@@ -163,7 +163,7 @@ class EspensesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = ( 
-            'farmId','ItemsGroupId','itemDescription', 'unitCost', 'quantity', 'deliveryCost',
+            'farmId','itemDescription', 'unitCost', 'quantity',
             'totalcost','comments','expensesDate', 'paymentToId','shopId', 'id'
         )
 

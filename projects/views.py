@@ -2,11 +2,11 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from django.http import HttpResponse
 from users.models import User
-from .models import Project, MyProjects, Company, Ponds, Stocking, PondstoDoList, Sales, activityNames, stockSource, Staff, ItemsGroup, Expense, ExpensesDisbursement
+from .models import Project, MyProjects, Company, Ponds, Stocking, PondstoDoList, Sales, activityNames, stockSource, Staff, Items, Expense, ExpensesDisbursement
 
 from projects.serializer import ProjectsTemplates, MyProjectsTemplates, CompanySerializersGet, CompanySerializersPost, PondSerializers, stockSourceSerializers, GetStockingSerializers
 from projects.serializer import StockingSerializers, PondstoDoListSerializers, SaleSerializers, activityNamesSerializers, createActivityNameSerializers, activityNameIdSerializers
-from projects.serializer import staffSerializers, ItemsGroupSerializers, EspensesSerializers, ExpensesDisbursementSerializers
+from projects.serializer import staffSerializers, ItemsSerializers, EspensesSerializers, ExpensesDisbursementSerializers
 
 from rest_framework import status, permissions
 from rest_framework.views import APIView
@@ -570,7 +570,8 @@ def PondToDo(request):
         except Company.DoesNotExist:
             msg = {"msg" : "Something went wrong"}
             return Response(msg, status= status.HTTP_404_NOT_FOUND)
-
+    
+    
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -599,7 +600,7 @@ def ActivityName(request):
     if request.method == 'PUT':
         data = JSONParser().parse(request)
         obj = activityNames.objects.all()
-        #***avoid duplicates, currently this is ot working.
+        #***avoid duplicates
         nameMatches = obj.filter(name__icontains=data["name"]).values()
         if(nameMatches):
              msg = {"msg" : "Activity Matches too close to one already existing"}
@@ -638,7 +639,7 @@ def ActivityName(request):
     elif request.method == 'DELETE':
         data = JSONParser().parse(request)
         try:
-            obj = activityNames.objects.get(id=user.id, creatorId=data["creatorId"])
+            obj = activityNames.objects.get(id=data["id"], creatorId=user.id)
             if obj:
                 obj.delete()
                 msg = {"msg" : "Activity Name has been deleted"}
@@ -765,7 +766,7 @@ def Spends(request):
                     msg = {"msg" : "item group Has been sucessfully added ", "data" : expense_Serializers.data}
                     return JsonResponse(msg)
             else:
-                expenseData = Expense.objects.all().order_by('id')
+                expenseData = Expense.objects.all().order_by('id').reverse()
                 if expenseData:
                     expense_Serializers = EspensesSerializers(expenseData, many=True)
                     msg = {"msg" : "item group Has been sucessfully added ", "data" : expense_Serializers.data}
@@ -882,9 +883,6 @@ def SpendsDisbursement(request):
     ''' 
 
 
-
-
-
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def ItemsGrouping(request):
@@ -893,7 +891,7 @@ def ItemsGrouping(request):
     if request.method == 'PUT':
         data = JSONParser().parse(request)
         if (user.id == 2):
-            IG_Serializers = ItemsGroupSerializers(data=data)
+            IG_Serializers = ItemsSerializers(data=data)
             if IG_Serializers.is_valid():
                 IG_Serializers.save()
                 msg = {"msg" : "item group Has been sucessfully added ", "data" : IG_Serializers.data}
@@ -905,9 +903,9 @@ def ItemsGrouping(request):
             return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         
     elif request.method == 'POST':
-        IG_N = ItemsGroup.objects.all().order_by('id')
+        IG_N = Items.objects.all().order_by('id')
         if IG_N:
-            IG_Serializers = ItemsGroupSerializers(IG_N, many=True)
+            IG_Serializers = ItemsSerializers(IG_N, many=True)
             msg = {"msg" : "All Items Group", "data" : IG_Serializers.data}
             return JsonResponse(msg, status=status.HTTP_200_OK)
         else:
@@ -918,7 +916,7 @@ def ItemsGrouping(request):
         data = JSONParser().parse(request)
         if (user.id == 2):
             try:
-                obj = ItemsGroup.objects.get(id=data["id"])
+                obj = Items.objects.get(id=data["id"])
                 if obj:
                     obj.delete()
                     msg = {"msg" : "Item Group has been deleted"}
