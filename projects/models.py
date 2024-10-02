@@ -1,6 +1,6 @@
 
 from django.db import models
-from datetime import datetime    
+from datetime import datetime
 from django.db.models.signals import post_save
 
 # Create your models here.
@@ -42,7 +42,7 @@ class contacts(models.Model):
     #link by parent to child id
 
 
-    
+
 #branch of a company. such as a farm
 class Project(models.Model):
     name = models.CharField(max_length=100)
@@ -108,13 +108,27 @@ class feeding(models.Model):
         "NE": "Not Eating"
     }
     reaction = models.CharField(max_length=2, choices=reactions)
-    brand = models.TextChoices('INHOUSE', 'ECO', 'BC', 'FLOAT', 'CUPPEN', 'ALAQUA', 'BSF_LARVE', 'OTHERS')
-    feedSize = models.TextChoices('0.5', '0.8', '1', '1.5', '2', '3', '4', '6', '9', 'others')
+    brands = [
+        ('IH', 'INHOUSE'),
+        ('ECO', 'ECO'),
+        ('BC', 'BLUE CROWN'),
+        ('FLOAT', 'FLOAT'),
+        ('CUPPEN', 'CUPPEN'),
+        ('ALAQUA', 'ALAQUA'),
+        ('BSF_LARVE', 'BSF_LARVE'),
+        ('OTHERS', 'OTHERS'),
+    ]
+    brand = models.CharField(
+        max_length=10,
+        choices=brands,
+        default='active',
+    )
+    feedSize = models.CharField(max_length=1000, null=True)
     comments = models.CharField(max_length=1000, null=True)
 
 class WaterChange(models.Model):
     pondId = models.IntegerField()
-    eventDate = models.DateField()  
+    eventDate = models.DateField()
     depth = models.IntegerField()
     preWaterColor = models.CharField(max_length=100)
     preWaterCond = models.CharField(max_length=600)
@@ -124,15 +138,15 @@ class PondstoDoList(models.Model):
     farmId = models.IntegerField()
     pomdName = models.CharField(max_length=100, null=True)
     taskName = models.CharField(max_length=100, null=True)
-    #Sorting = 1, 
+    #Sorting = 1,
     taskId = models.IntegerField()
     createDate = models.DateTimeField(default=datetime.now)
-    dueDate = models.DateTimeField()  
-    #1 to 5, 5 been most urgent 
+    dueDate = models.DateTimeField()
+    #1 to 5, 5 been most urgent
     urgency = models.IntegerField()
     # 1 = completed, 2 = In progress, 3 = Not Started
     status = models.IntegerField()
-    completeDate = models.DateTimeField(null=True)  
+    completeDate = models.DateTimeField(null=True)
     requestorId = models.IntegerField()
     assignedToId = models.IntegerField(null=True)
     taskDetails = models.CharField(max_length=1000)
@@ -146,7 +160,7 @@ class Stocking(models.Model):
     waterLevel = models.IntegerField(null=True)
     #treated = models.BooleanField()
     addedimage = models.ImageField(upload_to="images", null=True)
-    fishStage = models.TextChoices('Eggs', 'Fries', 'Fingerlings', 'Post_Fingerlings', 'Juvenie', 'Jumbo', 'drying_size', 'table_size', 'smoking_size', '1kg')
+    fishStage = models.CharField(max_length=1000, null=True)
     type = models.CharField(max_length=100, null=True)
     averageWeight = models.IntegerField(null=True)
     totalWeight = models.IntegerField(null=True)
@@ -159,7 +173,7 @@ class Stocking(models.Model):
     assittedById = models.IntegerField(null=True)
     followupTask = models.CharField(max_length=100, null=True)
     followupTaskDueDate = models.DateTimeField(null=True)
-    standing = models.TextChoices('Completed', 'Not Started', 'In Progress', 'Suspended', 'Paused', 'Cancled')
+    standing = models.CharField(max_length=1000, null=True)
     status = models.CharField(max_length=100, null=True)
     addedQuantity = models.IntegerField(null=True)
     addedSize = models.IntegerField(null=True)
@@ -187,10 +201,10 @@ class activityNames(models.Model):
     description = models.CharField(max_length=1000, null=True)
     creatorId = models.IntegerField()
     #dateCreated = models.DateTimeField(default=datetime.now)
-    
+
 class followupTaskSuggestion(models.Model):
     activityNamesId = models.IntegerField()
-    followupNameId = models.IntegerField()   
+    followupNameId = models.IntegerField()
 
 class Sales(models.Model):
     pondId = models.IntegerField()
