@@ -58,7 +58,7 @@ class StockingSerializers(serializers.ModelSerializer):
         model = Stocking
         fields = ( 
             'toPondId','toPondId','fromPondId','pondId',
-            'fishId', 'addedQuantity', 'addedWeight', 'comments'
+            'fishId', 'addedQuantity', 'addedWeight', 'recordDate', 'comments'
             )
              
  #{"farmId":6,"toPondId":9,"fromPondId":8,"fishStage":"Fingerlings","fishId":2,"addedQuantity":66,"addedWeight":666,"comments":"ghgtfh"}:    
