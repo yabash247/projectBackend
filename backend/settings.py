@@ -85,12 +85,32 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+#DATABASES = {
+    #'default': {
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3',
+    #}
+#}
+
+
+#Importing data into MySQL Database
+#You need to start a MySQL console and then run something like:
+#USE username$databasename;
+#SOURCE backup.sql;
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'yabash$projects',
+        'USER': 'yabash',
+        'PASSWORD': 'kingugo1985',
+        'HOST': 'yabash.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
     }
 }
+
+
+
 
 
 # Password validation
