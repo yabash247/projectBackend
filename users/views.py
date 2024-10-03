@@ -113,7 +113,7 @@ def dashboard(request):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def UserProfile(request):
     user = request.user
 
@@ -134,12 +134,16 @@ def UserProfile(request):
         if Profile_Serializers.is_valid():
             try:
                 # Get the existing profile
-                obj = Profile.objects.get(id=user.id)
+                obj = Profile.objects.get(id=1)
                 
                 # Update the fields dynamically from request.data
                 for field, value in request.data.items():
                     if hasattr(obj, field) and value is not None:
                         setattr(obj, field, value)
+                    
+                for field, file in request.FILES.items():
+                    if hasattr(obj, field) and file is not None:
+                        setattr(obj, field, file)
 
                 obj.save()  # Save the profile
                 msg = {"msg": "Your profile has been updated!"}
@@ -150,6 +154,7 @@ def UserProfile(request):
                 return Response(msg, status=status.HTTP_404_NOT_FOUND)
 
         else: 
+            print('error serializing data')
             return JsonResponse(Profile_Serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
             

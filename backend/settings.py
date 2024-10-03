@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-#&cr6nm2v%#5sq^n@yx-jd=u86(hk!cu+s8x5o3hz$lw4s-f-8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['yabash.pythonanywhere.com', 'localhost']
+ALLOWED_HOSTS = ['yabash.pythonanywhere.com', 'localhost', '127.0.0.1']
 CORS_ALLOWED_ORIGINS = [
     'https://frontend-eight-wheat-85.vercel.app',
     'https://frontend-i2hcwynk4-yabashs-projects.vercel.app',
@@ -183,6 +183,10 @@ LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
