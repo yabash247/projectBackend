@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Project, MyProjects, Company, Ponds, Stocking, PondstoDoList, Sales, activityNames, stockSource
-from .models import Staff, Expense, ItemsGroup, ExpensesDisbursement
+from .models import Staff, Expense, Items, ExpensesDisbursement
 
 
 class ProjectsTemplates(serializers.ModelSerializer):
@@ -58,7 +58,7 @@ class StockingSerializers(serializers.ModelSerializer):
         model = Stocking
         fields = ( 
             'toPondId','toPondId','fromPondId','pondId',
-            'fishId', 'addedQuantity', 'addedWeight', 'comments'
+            'fishId', 'addedQuantity', 'addedWeight', 'recordDate', 'comments'
             )
              
  #{"farmId":6,"toPondId":9,"fromPondId":8,"fishStage":"Fingerlings","fishId":2,"addedQuantity":66,"addedWeight":666,"comments":"ghgtfh"}:    
@@ -151,9 +151,9 @@ class staffSerializers(serializers.ModelSerializer):
             'status'
         )   
 
-class ItemsGroupSerializers(serializers.ModelSerializer):
+class ItemsSerializers(serializers.ModelSerializer):
     class Meta:
-        model = ItemsGroup
+        model = Items
         fields = ( 
             'id','name','desc', 
             'comments'
@@ -163,7 +163,7 @@ class EspensesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = ( 
-            'farmId','ItemsGroupId','itemDescription', 'unitCost', 'quantity', 'deliveryCost',
+            'farmId','itemDescription', 'unitCost', 'quantity',
             'totalcost','comments','expensesDate', 'paymentToId','shopId', 'id'
         )
 

@@ -92,6 +92,13 @@ class Ponds(models.Model):
 class stockSource(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
+    unitCost = models.IntegerField(null=True)
+    quantity = models.IntegerField(null=True)
+    totalcost = models.IntegerField()
+    totalWeight = models.IntegerField()
+    aveLength = models.IntegerField(null=True)
+    dob = models.DateTimeField()
+    purchaseDate = models.DateTimeField()
     PurchaseId = models.IntegerField()
     farmId = models.IntegerField()
     vendorId = models.IntegerField()
@@ -108,7 +115,22 @@ class feeding(models.Model):
         "NE": "Not Eating"
     }
     reaction = models.CharField(max_length=2, choices=reactions)
-    brand = models.TextChoices('INHOUSE', 'ECO', 'BC', 'FLOAT', 'CUPPEN', 'ALAQUA', 'BSF_LARVE', 'OTHERS')
+
+    brands = [
+        ('IH', 'INHOUSE'),
+        ('ECO', 'ECO'),
+        ('BC', 'BLUE CROWN'),
+        ('FLOAT', 'FLOAT'),
+        ('CUPPEN', 'CUPPEN'),
+        ('ALAQUA', 'ALAQUA'),
+        ('BSF_LARVE', 'BSF_LARVE'),
+        ('OTHERS', 'OTHERS'),
+    ]
+    brand = models.CharField(
+        max_length=10,
+        choices=brands,
+        default='active',
+    )
     feedSize = models.TextChoices('0.5', '0.8', '1', '1.5', '2', '3', '4', '6', '9', 'others')
     comments = models.CharField(max_length=1000, null=True)
 
@@ -224,25 +246,47 @@ class Staff(models.Model):
     status = models.IntegerField(default=1)
     comments = models.CharField(max_length=1000, null=True)
 
-
 class Expense(models.Model):
     farmId = models.IntegerField()
-    ItemsGroupId = models.IntegerField()
-    itemDescription = models.CharField(max_length=500)
+    itemDescription = models.CharField(max_length=2000) # per Item : (quantity-unitCost-transportation(going)-deliveryCost)
     unitCost = models.IntegerField(null=True)
     quantity = models.IntegerField(null=True)
-    deliveryCost = models.IntegerField(null=True)
     totalcost = models.IntegerField()
     expensesDate = models.DateTimeField()
     paymentToId = models.IntegerField(null=True)
     shopId = models.IntegerField(null=True)
     comments = models.CharField(max_length=1000, null=True)
 
+class purchaseDelivery(models.Model):
+    expenseId = models.IntegerField()
+    deliveryCost = models.IntegerField()
+    deliveryStatus = models.IntegerField() #1: Completly delivered, 2:partialy delivered, 3:Delvered
+    shipperId = models.IntegerField(null=True)
+    mainHandler = models.CharField(max_length=1000) #could be driver, deliver person etc... / fullname - contact - position
+    secondaryHandler = models.CharField(max_length=1000, null=True) #could be driver, deliver person etc... / fullname - contact - position
+    shippingLocation = models.CharField(max_length=1000, null=True)
+    deliveryPickupLocation = models.CharField(max_length=1000)
+    estimatedShipTime = models.DateTimeField(max_length=1000)
+    estimatedDeliveryTime = models.DateTimeField()
+    receivierStaffId = models.IntegerField()
 
-class ItemsGroup(models.Model):
+class expenseItemTableLink (models.Model):
+    expenseId = models.IntegerField()
+    itemId = models.IntegerField()
+    #itemTableName = models.CharField(max_length=1000)
+    quantityPercentage = models.IntegerField()
+    costPercentage = models.IntegerField()
+    deliveryCostPercentage = models.IntegerField()
+
+class Items(models.Model):
     name = models.CharField(max_length=100)
     desc = models.CharField(max_length=1000)
     comments = models.CharField(max_length=1000, null=True)
+
+class ItemParent(models.Model):
+    itemId = models.IntegerField(null=True)
+    parentId = models.IntegerField(null=True)
+
 
 class ExpensesDisbursement(models.Model):
     expenseId = models.IntegerField()
@@ -250,6 +294,7 @@ class ExpensesDisbursement(models.Model):
     allocatedToId = models.IntegerField()
     ItemsGroupId = models.IntegerField()
     cost = models.IntegerField()
+
 
 
 # class Security(models.Model):
