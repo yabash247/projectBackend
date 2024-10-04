@@ -113,7 +113,7 @@ def dashboard(request):
 
 
 @api_view(['GET', 'POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def UserProfile(request):
     user = request.user
 
@@ -134,7 +134,7 @@ def UserProfile(request):
         if Profile_Serializers.is_valid():
             try:
                 # Get the existing profile
-                obj = Profile.objects.get(id=1)
+                obj = Profile.objects.get(id=user.id)
                 
                 # Update the fields dynamically from request.data
                 for field, value in request.data.items():
