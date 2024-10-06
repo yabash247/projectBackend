@@ -25,6 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include("users.urls")),
     path('projects/', include("projects.urls")),
+    path('bsf/', include("bsf.urls")),
+    path('fishfarm/', include("fishfarm.urls")),
     #path('ckeditor/', include('ckeditor_uploader.urls')),
     #path("ckeditor5/", include('django_ckeditor_5.urls')),
 

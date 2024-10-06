@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.tokens import default_token_generator
 
 from users.serializer import MyTokenObtainPairSerializer, RegisterSerializer, ProfileViewSerializers, ProfileEditSerializers
+from users.serializer import ContactSerializers
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -54,8 +55,6 @@ class LoginView(APIView):
            if not user_by_email:
                 return Response({'detail': 'Email Dose not Exist'}, status=status.HTTP_400_BAD_REQUEST)
        return Response({"error":"email or password isincorrect!"},status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-   
-
    
 
 #Login User with Checks
@@ -122,7 +121,7 @@ def UserProfile(request):
             obj = Profile.objects.get(id=user.id)
             if obj:
                 Profile_Serializers = ProfileViewSerializers(obj, many=False)
-                msg = {"msg" : "Your profile is ready for viewing", "data" : Profile_Serializers.data, "userEmail" : user.email}
+                msg = {"msg" : "Your profile is ready for viewing", "data" : Profile_Serializers.data, "userEmail" : user.email, "isSuperUser" :request.user.is_superuser}
                 return JsonResponse(msg, safe=False)
         except:
             msg = {"msg" : "Wow thats Strange!!!, profile not found. Please refresh page and try again"}
@@ -232,3 +231,24 @@ def forgot_password(request):
     except Exception as e:
         print(f'Error sending password reset email: {str(e)}')
         return JsonResponse({'detail': 'An error occurred while sending the password reset link.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET', 'POST', 'PUT'])
+@permission_classes([IsAuthenticated])
+def Contact(request):
+    user = request.user
+    data = JSONParser().parse(request)
+
+    if request.method == 'PUT': 
+        #Check if requestor has permission to create new contact 
+        if not data["userId"]:
+            return JsonResponse({'detail': 'Please provide both email and username'}, status=status.HTTP_400_BAD_REQUEST)
+    
+        Serializers = ContactSerializers(data=data)
+        if  Serializers.is_valid():
+            if  Serializers.save():
+                    msg = {"msg" : "sucessfully Added!!!", "data": Serializers.data}
+                    return JsonResponse(msg, status=status.HTTP_201_CREATED)
+        else:
+            return JsonResponse(Serializers.errors, status=status.HTTP_400_BAD_REQUEST)  
+        

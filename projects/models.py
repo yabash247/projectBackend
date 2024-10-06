@@ -25,6 +25,8 @@ class contacts(models.Model):
     userId = models.IntegerField(null=True)
     firstName = models.CharField(max_length=100, null=True)
     lastName = models.CharField(max_length=100, null=True)
+    dateOfBirth = models.DateTimeField(null=True)
+    dataCreated = models.DateTimeField(default=datetime.now)
     creatorId =  models.IntegerField(null=True)
     phoneOne =  models.IntegerField(null=True)
     phoneTwo =  models.IntegerField(null=True)
@@ -228,6 +230,20 @@ class Sales(models.Model):
     status = models.IntegerField()
     comments = models.CharField(max_length=1000, null=True)
 
+class employee(models.Model):
+    contactId =  models.IntegerField(default=0)
+    farmId = models.IntegerField()
+    position = models.CharField(max_length=100)
+    employmentDate = models.DateTimeField(null=True)
+    positionDate = models.DateTimeField(null=True)
+
+    #changedPosition, #currentPosition, #fired, #resigned
+    status = models.IntegerField(default=1)
+
+    comments = models.CharField(max_length=1000, null=True)
+
+
+
 class Staff(models.Model):
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
@@ -287,38 +303,9 @@ class ItemParent(models.Model):
     itemId = models.IntegerField(null=True)
     parentId = models.IntegerField(null=True)
 
-
 class ExpensesDisbursement(models.Model):
     expenseId = models.IntegerField()
     sharePecentage = models.IntegerField()
     allocatedToId = models.IntegerField()
     ItemsGroupId = models.IntegerField()
     cost = models.IntegerField()
-
-
-
-# class Security(models.Model):
-#     name = models.IntegerField(null=True)
-
-# class Survelance(models.Model):
-#     name = models.IntegerField(null=True)
-
-# class shops(models.Model):
-#     name = models.IntegerField(null=True)
-
-
-# class chartData(models.Model):
-#     nameId = models.IntegerField(null=True)
-#     actual = models.IntegerField(null=True)
-#     planed = models.IntegerField(null=True)
-#     recordeDate = models.DateTimeField(null=True)
-
-# class chartDataLink(models.Model):
-#     nameId = models.IntegerField()
-#     parentId = models.IntegerField()
-
-# class chartDataDescription(models.Model):
-#     name = models.CharField(max_length=100, null=True)
-#     description = models.CharField(max_length=1000, null=True)
-#     creatorId = models.IntegerField()
-

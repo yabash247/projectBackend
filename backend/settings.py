@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # Custom
     'users',
     'projects',
+    'bsf',
+    'fishfarm',
 
     # Third Party
     'rest_framework',
