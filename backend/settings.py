@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-#&cr6nm2v%#5sq^n@yx-jd=u86(hk!cu+s8x5o3hz$lw4s-f-8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['yabash.pythonanywhere.com', 'localhost']
+ALLOWED_HOSTS = ['yabash.pythonanywhere.com', 'localhost', '127.0.0.1']
 CORS_ALLOWED_ORIGINS = [
     'https://frontend-eight-wheat-85.vercel.app',
     'https://frontend-i2hcwynk4-yabashs-projects.vercel.app',
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # Custom
     'users',
     'projects',
+    'bsf',
+    'fishfarm',
 
     # Third Party
     'rest_framework',
@@ -85,18 +87,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = {
-    #'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
-    #}
-#}
+'''
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
-#Importing data into MySQL Database
-#You need to start a MySQL console and then run something like:
-#USE username$databasename;
-#SOURCE backup.sql;
 
 DATABASES = {
     'default': {
@@ -109,8 +108,30 @@ DATABASES = {
     }
 }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'projects',
+        'USER': 'root',
+        'PASSWORD': 'yabash247365',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 
+'''
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'yabash$projects',
+        'USER': 'yabash',
+        'PASSWORD': 'kingugo1985',
+        'HOST': 'yabash.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+    }
+}
 
 
 # Password validation
@@ -203,6 +224,10 @@ LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
