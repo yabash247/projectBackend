@@ -101,6 +101,6 @@ class ContactSerializers(serializers.ModelSerializer):
     class Meta:
         model = Contacts
         fields = ( 
-            'id', 'name', 'creatorId', 
-            'contactName', 'contactEmail', 'Address', 'status', 
+            'id', 'userId', 'firstName', 'lastName', 'dateOfBirth',
+            'dataCreated', 'creatorId', 'comments', 'status', 
             )

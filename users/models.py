@@ -35,13 +35,19 @@ class Profile(models.Model):
 
 class Contacts(models.Model):
     userId = models.IntegerField(null=True)
-    firstName = models.CharField(max_length=100, null=True)
-    lastName = models.CharField(max_length=100, null=True)
+    firstName = models.CharField(max_length=100)
+    lastName = models.CharField(max_length=100)
     dateOfBirth = models.DateTimeField(null=True)
     dataCreated = models.DateTimeField(default=datetime.now)
-    creatorId =  models.IntegerField(null=True)
+    creatorId =  models.IntegerField(default=0)
     comments = models.CharField(max_length=1000, null=True)
-    status = models.IntegerField(null=True)
+    statuses = {
+        "A": "Active",
+        "UV": "Unverified",
+        "S": "Suspended",
+        "RE": "Removed"
+    }
+    status = models.CharField(max_length=2, choices=statuses)
 
 class NextOfKin(models.Model):
     userContactId = models.IntegerField()
