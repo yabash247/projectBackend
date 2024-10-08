@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.urls import reverse
-from users.models import User, Profile
+from users.models import User, Profile, Contacts
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
@@ -239,16 +239,70 @@ def Contact(request):
     user = request.user
     data = JSONParser().parse(request)
 
-    if request.method == 'PUT': 
-        #Check if requestor has permission to create new contact 
-        if not data["userId"]:
-            return JsonResponse({'detail': 'Please provide both email and username'}, status=status.HTTP_400_BAD_REQUEST)
     
+    if request.method == 'PUT': 
         Serializers = ContactSerializers(data=data)
         if  Serializers.is_valid():
             if  Serializers.save():
                     msg = {"msg" : "sucessfully Added!!!", "data": Serializers.data}
                     return JsonResponse(msg, status=status.HTTP_201_CREATED)
+            else:
+                msg = {"msg" : "Wired! Could not save. Please try again"}
+                return JsonResponse(msg, status=status.HTTP_406_NOT_ACCEPTABLE)  
         else:
             return JsonResponse(Serializers.errors, status=status.HTTP_400_BAD_REQUEST)  
+    
+    elif request.method == 'POST':
+        dbData = []
+        if (data["id"] > 0):
+            dbData = Contacts.objects.filter(id=data["id"]).order_by('id').reverse()
+        else:
+             dbData = Contacts.objects.all().order_by('id').reverse()
+        if dbData:
+            Serializers = ContactSerializers(dbData, many=True)
+            msg = {"msg" : "Successful!!!", "data" : Serializers.data}
+            return JsonResponse(msg)
+        else:
+            msg = {"msg" : "Requested Data dosen't exisit"}
+            return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)    
         
+    elif request.method == 'DELETE':
+        try:
+            obj = Contacts.objects.get(id=data["id"])
+            if obj:
+                obj.delete()
+                msg = {"msg" : "Item Group has been deleted"}
+                return Response(msg)
+            else:
+                msg = {"msg" : "You are not authorized"}
+                return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        except:
+            msg = {"msg" : "Something went wrong"}
+            return Response(msg, status= status.HTTP_404_NOT_FOUND)
+
+
+''' 
+
+    Sample 
+
+    @api_view(['GET', 'POST', 'PUT'])
+    @permission_classes([IsAuthenticated])
+    def Contact(request):
+        user = request.user
+        data = JSONParser().parse(request)
+
+        if request.method == 'PUT': 
+            #Check if requestor has permission to create new contact 
+            #if not data["userId"]:
+                #return JsonResponse({'detail': 'Please provide both email and username'}, status=status.HTTP_400_BAD_REQUEST)
+            Serializers = ContactSerializers(data=data)
+            if  Serializers.is_valid():
+                if  Serializers.save():
+                        msg = {"msg" : "sucessfully Added!!!", "data": Serializers.data}
+                        return JsonResponse(msg, status=status.HTTP_201_CREATED)
+                else:
+                    msg = {"msg" : "Wired! Could not save. Please try again"}
+                    return JsonResponse(msg, status=status.HTTP_406_NOT_ACCEPTABLE)  
+            else:
+                return JsonResponse(Serializers.errors, status=status.HTTP_400_BAD_REQUEST)  
+'''

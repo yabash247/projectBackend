@@ -95,7 +95,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-'''
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'yabash$projects',
+        'USER': 'yabash',
+        'PASSWORD': 'kingugo1985',
+        'HOST': 'yabash.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+    }
+}
 
 DATABASES = {
     'default': {
@@ -104,6 +115,20 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'yabash247365',
         'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+
+
+'''
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'yabash$projects',
+        'USER': 'yabash',
+        'PASSWORD': 'kingugo1985',
+        'HOST': 'yabash.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
 }
