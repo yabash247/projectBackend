@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.urls import reverse
-from users.models import User, Profile
+from users.models import User, Profile, Contacts
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.tokens import default_token_generator
 
 from users.serializer import MyTokenObtainPairSerializer, RegisterSerializer, ProfileViewSerializers, ProfileEditSerializers
+from users.serializer import ContactSerializers
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -54,8 +55,6 @@ class LoginView(APIView):
            if not user_by_email:
                 return Response({'detail': 'Email Dose not Exist'}, status=status.HTTP_400_BAD_REQUEST)
        return Response({"error":"email or password isincorrect!"},status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-   
-
    
 
 #Login User with Checks
@@ -122,7 +121,7 @@ def UserProfile(request):
             obj = Profile.objects.get(id=user.id)
             if obj:
                 Profile_Serializers = ProfileViewSerializers(obj, many=False)
-                msg = {"msg" : "Your profile is ready for viewing", "data" : Profile_Serializers.data, "userEmail" : user.email}
+                msg = {"msg" : "Your profile is ready for viewing", "data" : Profile_Serializers.data, "userEmail" : user.email, "isSuperUser" :request.user.is_superuser}
                 return JsonResponse(msg, safe=False)
         except:
             msg = {"msg" : "Wow thats Strange!!!, profile not found. Please refresh page and try again"}
@@ -140,6 +139,10 @@ def UserProfile(request):
                 for field, value in request.data.items():
                     if hasattr(obj, field) and value is not None:
                         setattr(obj, field, value)
+                    
+                for field, file in request.FILES.items():
+                    if hasattr(obj, field) and file is not None:
+                        setattr(obj, field, file)
 
                 obj.save()  # Save the profile
                 msg = {"msg": "Your profile has been updated!"}
@@ -150,6 +153,7 @@ def UserProfile(request):
                 return Response(msg, status=status.HTTP_404_NOT_FOUND)
 
         else: 
+            print('error serializing data')
             return JsonResponse(Profile_Serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
             
@@ -227,3 +231,78 @@ def forgot_password(request):
     except Exception as e:
         print(f'Error sending password reset email: {str(e)}')
         return JsonResponse({'detail': 'An error occurred while sending the password reset link.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET', 'POST', 'PUT'])
+@permission_classes([IsAuthenticated])
+def Contact(request):
+    user = request.user
+    data = JSONParser().parse(request)
+
+    
+    if request.method == 'PUT': 
+        Serializers = ContactSerializers(data=data)
+        if  Serializers.is_valid():
+            if  Serializers.save():
+                    msg = {"msg" : "sucessfully Added!!!", "data": Serializers.data}
+                    return JsonResponse(msg, status=status.HTTP_201_CREATED)
+            else:
+                msg = {"msg" : "Wired! Could not save. Please try again"}
+                return JsonResponse(msg, status=status.HTTP_406_NOT_ACCEPTABLE)  
+        else:
+            return JsonResponse(Serializers.errors, status=status.HTTP_400_BAD_REQUEST)  
+    
+    elif request.method == 'POST':
+        dbData = []
+        if (data["id"] > 0):
+            dbData = Contacts.objects.filter(id=data["id"]).order_by('id').reverse()
+        else:
+             dbData = Contacts.objects.all().order_by('id').reverse()
+        if dbData:
+            Serializers = ContactSerializers(dbData, many=True)
+            msg = {"msg" : "Successful!!!", "data" : Serializers.data}
+            return JsonResponse(msg)
+        else:
+            msg = {"msg" : "Requested Data dosen't exisit"}
+            return JsonResponse(msg, status=status.HTTP_404_NOT_FOUND)    
+        
+    elif request.method == 'DELETE':
+        try:
+            obj = Contacts.objects.get(id=data["id"])
+            if obj:
+                obj.delete()
+                msg = {"msg" : "Item Group has been deleted"}
+                return Response(msg)
+            else:
+                msg = {"msg" : "You are not authorized"}
+                return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        except:
+            msg = {"msg" : "Something went wrong"}
+            return Response(msg, status= status.HTTP_404_NOT_FOUND)
+
+
+''' 
+
+    Sample 
+
+    @api_view(['GET', 'POST', 'PUT'])
+    @permission_classes([IsAuthenticated])
+    def Contact(request):
+        user = request.user
+        data = JSONParser().parse(request)
+
+        if request.method == 'PUT': 
+            #Check if requestor has permission to create new contact 
+            #if not data["userId"]:
+                #return JsonResponse({'detail': 'Please provide both email and username'}, status=status.HTTP_400_BAD_REQUEST)
+            Serializers = ContactSerializers(data=data)
+            if  Serializers.is_valid():
+                if  Serializers.save():
+                        msg = {"msg" : "sucessfully Added!!!", "data": Serializers.data}
+                        return JsonResponse(msg, status=status.HTTP_201_CREATED)
+                else:
+                    msg = {"msg" : "Wired! Could not save. Please try again"}
+                    return JsonResponse(msg, status=status.HTTP_406_NOT_ACCEPTABLE)  
+            else:
+                return JsonResponse(Serializers.errors, status=status.HTTP_400_BAD_REQUEST)  
+'''

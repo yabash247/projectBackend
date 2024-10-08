@@ -23,7 +23,7 @@ urlpatterns = [
     path('test/', views.test.as_view(), name='test'),
     path('', views.getRoutes),
 
-    path('ItemsGroup/', views.ItemsGrouping, name='ItemsGroup'),
+    path('ItemsGroup/', views.ItemsGrouping, name='ItemsGroup'), 
 
 ]
 

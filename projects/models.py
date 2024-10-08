@@ -25,6 +25,8 @@ class contacts(models.Model):
     userId = models.IntegerField(null=True)
     firstName = models.CharField(max_length=100, null=True)
     lastName = models.CharField(max_length=100, null=True)
+    dateOfBirth = models.DateTimeField(null=True)
+    dataCreated = models.DateTimeField(default=datetime.now)
     creatorId =  models.IntegerField(null=True)
     phoneOne =  models.IntegerField(null=True)
     phoneTwo =  models.IntegerField(null=True)
@@ -92,6 +94,13 @@ class Ponds(models.Model):
 class stockSource(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
+    unitCost = models.IntegerField(null=True)
+    quantity = models.IntegerField(null=True)
+    totalcost = models.IntegerField()
+    totalWeight = models.IntegerField()
+    aveLength = models.IntegerField(null=True)
+    dob = models.DateTimeField()
+    purchaseDate = models.DateTimeField()
     PurchaseId = models.IntegerField()
     farmId = models.IntegerField()
     vendorId = models.IntegerField()
@@ -108,6 +117,10 @@ class feeding(models.Model):
         "NE": "Not Eating"
     }
     reaction = models.CharField(max_length=2, choices=reactions)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4101afb88ffaea6f04b4f09a38e59297e54f5f9e
     brands = [
         ('IH', 'INHOUSE'),
         ('ECO', 'ECO'),
@@ -123,7 +136,11 @@ class feeding(models.Model):
         choices=brands,
         default='active',
     )
+<<<<<<< HEAD
     feedSize = models.CharField(max_length=1000, null=True)
+=======
+    feedSize = models.TextChoices('0.5', '0.8', '1', '1.5', '2', '3', '4', '6', '9', 'others')
+>>>>>>> 4101afb88ffaea6f04b4f09a38e59297e54f5f9e
     comments = models.CharField(max_length=1000, null=True)
 
 class WaterChange(models.Model):
@@ -220,6 +237,20 @@ class Sales(models.Model):
     status = models.IntegerField()
     comments = models.CharField(max_length=1000, null=True)
 
+class employee(models.Model):
+    contactId =  models.IntegerField(default=0)
+    farmId = models.IntegerField()
+    position = models.CharField(max_length=100)
+    employmentDate = models.DateTimeField(null=True)
+    positionDate = models.DateTimeField(null=True)
+
+    #changedPosition, #currentPosition, #fired, #resigned
+    status = models.IntegerField(default=1)
+
+    comments = models.CharField(max_length=1000, null=True)
+
+
+
 class Staff(models.Model):
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
@@ -238,25 +269,46 @@ class Staff(models.Model):
     status = models.IntegerField(default=1)
     comments = models.CharField(max_length=1000, null=True)
 
-
 class Expense(models.Model):
     farmId = models.IntegerField()
-    ItemsGroupId = models.IntegerField()
-    itemDescription = models.CharField(max_length=500)
+    itemDescription = models.CharField(max_length=2000) # per Item : (quantity-unitCost-transportation(going)-deliveryCost)
     unitCost = models.IntegerField(null=True)
     quantity = models.IntegerField(null=True)
-    deliveryCost = models.IntegerField(null=True)
     totalcost = models.IntegerField()
     expensesDate = models.DateTimeField()
     paymentToId = models.IntegerField(null=True)
     shopId = models.IntegerField(null=True)
     comments = models.CharField(max_length=1000, null=True)
 
+class purchaseDelivery(models.Model):
+    expenseId = models.IntegerField()
+    deliveryCost = models.IntegerField()
+    deliveryStatus = models.IntegerField() #1: Completly delivered, 2:partialy delivered, 3:Delvered
+    shipperId = models.IntegerField(null=True)
+    mainHandler = models.CharField(max_length=1000) #could be driver, deliver person etc... / fullname - contact - position
+    secondaryHandler = models.CharField(max_length=1000, null=True) #could be driver, deliver person etc... / fullname - contact - position
+    shippingLocation = models.CharField(max_length=1000, null=True)
+    deliveryPickupLocation = models.CharField(max_length=1000)
+    estimatedShipTime = models.DateTimeField(max_length=1000)
+    estimatedDeliveryTime = models.DateTimeField()
+    receivierStaffId = models.IntegerField()
 
-class ItemsGroup(models.Model):
+class expenseItemTableLink (models.Model):
+    expenseId = models.IntegerField()
+    itemId = models.IntegerField()
+    #itemTableName = models.CharField(max_length=1000)
+    quantityPercentage = models.IntegerField()
+    costPercentage = models.IntegerField()
+    deliveryCostPercentage = models.IntegerField()
+
+class Items(models.Model):
     name = models.CharField(max_length=100)
     desc = models.CharField(max_length=1000)
     comments = models.CharField(max_length=1000, null=True)
+
+class ItemParent(models.Model):
+    itemId = models.IntegerField(null=True)
+    parentId = models.IntegerField(null=True)
 
 class ExpensesDisbursement(models.Model):
     expenseId = models.IntegerField()
@@ -264,30 +316,3 @@ class ExpensesDisbursement(models.Model):
     allocatedToId = models.IntegerField()
     ItemsGroupId = models.IntegerField()
     cost = models.IntegerField()
-
-
-# class Security(models.Model):
-#     name = models.IntegerField(null=True)
-
-# class Survelance(models.Model):
-#     name = models.IntegerField(null=True)
-
-# class shops(models.Model):
-#     name = models.IntegerField(null=True)
-
-
-# class chartData(models.Model):
-#     nameId = models.IntegerField(null=True)
-#     actual = models.IntegerField(null=True)
-#     planed = models.IntegerField(null=True)
-#     recordeDate = models.DateTimeField(null=True)
-
-# class chartDataLink(models.Model):
-#     nameId = models.IntegerField()
-#     parentId = models.IntegerField()
-
-# class chartDataDescription(models.Model):
-#     name = models.CharField(max_length=100, null=True)
-#     description = models.CharField(max_length=1000, null=True)
-#     creatorId = models.IntegerField()
-

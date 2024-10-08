@@ -1,4 +1,4 @@
-from users.models import User, Profile
+from users.models import User, Profile, Contacts
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
@@ -95,3 +95,12 @@ class ProfileEditSerializers(serializers.ModelSerializer):
             'phone',
             'birthday',
         )
+
+
+class ContactSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Contacts
+        fields = ( 
+            'id', 'userId', 'firstName', 'lastName', 'dateOfBirth',
+            'dataCreated', 'creatorId', 'comments', 'status', 
+            )
