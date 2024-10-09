@@ -140,8 +140,12 @@ class feeding(models.Model):
     feedSize = models.CharField(max_length=1000, null=True)
 =======
     feedSize = models.TextChoices('0.5', '0.8', '1', '1.5', '2', '3', '4', '6', '9', 'others')
+<<<<<<< HEAD
 >>>>>>> 4101afb88ffaea6f04b4f09a38e59297e54f5f9e
     comments = models.CharField(max_length=1000, null=True)
+=======
+    comments = models.CharField(max_length=1000, null=True) 
+>>>>>>> dfca3262c8cb1e8a0a82a9a8659798de4fb17408
 
 class WaterChange(models.Model):
     pondId = models.IntegerField()
