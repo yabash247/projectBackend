@@ -134,7 +134,7 @@ class feeding(models.Model):
         default='active',
     )
     feedSize = models.TextChoices('0.5', '0.8', '1', '1.5', '2', '3', '4', '6', '9', 'others')
-    comments = models.CharField(max_length=1000, null=True)
+    comments = models.CharField(max_length=1000, null=True) 
 
 class WaterChange(models.Model):
     pondId = models.IntegerField()
