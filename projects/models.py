@@ -138,11 +138,10 @@ class feeding(models.Model):
         ('OTHERS', 'OTHERS'),
     ]
     feedSize = models.CharField(
-        max_length=2,
+        max_length=10,
         choices=brands,
         default='active',
     )
-
     comments = models.CharField(max_length=1000, null=True)
 
 

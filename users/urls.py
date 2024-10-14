@@ -17,7 +17,6 @@ urlpatterns = [
     path('updateProfile/', views.update_user_profile, name='update_user_profile'),
     path('changePassword/', views.change_password, name='change_password'),
     path('forgot_password/', views.forgot_password, name='forgot_password'),
-    path('Contact/', views.Contact, name='Contact'),
     path('', views.getRoutes),
 ]
 
