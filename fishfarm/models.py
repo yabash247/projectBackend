@@ -28,7 +28,7 @@ class Staff(models.Model):
     dataCreated = models.DateTimeField(default=datetime.now)
     joinedCompanyDate = models.DateTimeField(null=True)
     comments = models.CharField(max_length=2000, null=True)
-    
+
     #address = models.CharField(max_length=1000, null=True)
     #relationId = models.IntegerField(null=True)
     #individualPaymentMethodTd
@@ -45,7 +45,7 @@ class StaffCurrent(models.Model):
         (5, 'Five'),
     ]
     level = models.CharField( max_length=10, choices=levels, default=1,)
-    pay = models.DecimalField(max_digits=None, decimal_places=None)
+    pay = models.DecimalField(max_digits=25, decimal_places=10)
     farmId = models.IntegerField()
     stat = [
         ('A', 'Active'),
@@ -59,7 +59,7 @@ class StaffCurrent(models.Model):
     status = models.CharField( max_length=2, choices=stat, default='IA',)
     dataCreated = models.DateTimeField(default=datetime.now)
     comments = models.CharField(max_length=1000, null=True)
-    
+
 
 
 class StaffOrgChart(models.Model):
