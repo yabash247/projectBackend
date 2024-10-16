@@ -13,6 +13,7 @@ class Authority(models.Model):
         (4, 'Four'),
         (5, 'Five'),
     ]
+    view = models.CharField( max_length=1, choices=levels, default=5,)
     add = models.CharField( max_length=1, choices=levels, default=5,)
     edit = models.CharField( max_length=1, choices=levels, default=5,)
     delete = models.CharField( max_length=1, choices=levels, default=5,)
