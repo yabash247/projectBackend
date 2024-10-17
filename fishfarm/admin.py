@@ -16,7 +16,7 @@ class StaffAdmin(admin.ModelAdmin):
 admin.site.register(Staff, StaffAdmin)
 
 class StaffCurrentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'userId', 'position', 'level', 'pay',
+    list_display = ['id', 'staffId', 'position', 'level', 'pay',
                     'farmId','status', 'dataCreated', 'comments'
                 ]
 admin.site.register(StaffCurrent, StaffCurrentAdmin)

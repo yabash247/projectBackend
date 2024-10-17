@@ -24,10 +24,10 @@ class Authority(models.Model):
 class Staff(models.Model):
     userId = models.IntegerField(unique=True)
     companyId = models.IntegerField()
-    workPhone = models.CharField(max_length=100)
-    workEmail = models.EmailField(max_length=1000, null=True)
+    workPhone = models.CharField(max_length=100, unique=True) #option too select same as that in profile // avoid duplicates
+    workEmail = models.EmailField(max_length=1000, null=True, unique=True) #option too select same as that in profile // avoid duplicates
     dataCreated = models.DateTimeField(default=datetime.now)
-    joinedCompanyDate = models.DateTimeField(null=True)
+    joinedCompanyDate = models.DateTimeField(null=True) #only manager and higher with authority can add too this / only level 4 and above can edit wih permision from level 5
     comments = models.CharField(max_length=2000, null=True)
 
     #address = models.CharField(max_length=1000, null=True)
@@ -36,14 +36,14 @@ class Staff(models.Model):
 
 
 class StaffCurrent(models.Model):
-    userId = models.IntegerField()
+    staffId = models.IntegerField()
     position = models.CharField(max_length=100)
     levels = [
-        (1, 'One'),
-        (2, 'Two'),
-        (3, 'Three'),
-        (4, 'Four'),
-        (5, 'Five'),
+        ('1', 'One'),
+        ('2', 'Two'),
+        ('3', 'Three'),
+        ('4', 'Four'),
+        ('5', 'Five'),
     ]
     level = models.CharField( max_length=10, choices=levels, default=1,)
     pay = models.DecimalField(max_digits=25, decimal_places=10)
@@ -59,6 +59,7 @@ class StaffCurrent(models.Model):
     ]
     status = models.CharField( max_length=2, choices=stat, default='IA',)
     dataCreated = models.DateTimeField(default=datetime.now)
+    eventOccuredDate = models.DateTimeField(default=datetime.now)
     comments = models.CharField(max_length=1000, null=True)
 
 

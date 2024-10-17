@@ -1,5 +1,5 @@
 from django.contrib import admin
-from projects.models import Project, MyProjects, Ponds, PondstoDoList
+from projects.models import Project, MyProjects, Ponds, PondstoDoList, Stocking, Company
 
 # Register your models here.
 
@@ -12,7 +12,7 @@ class myProject(admin.ModelAdmin):
 
 
 class AllPonds(admin.ModelAdmin):
-    list_display = ['name', 'materialType', 'position_row', 'position_col']
+    list_display = ['id','name', 'materialType', 'position_row', 'position_col']
 
 
 class feedingCheck(admin.ModelAdmin):
@@ -27,3 +27,14 @@ admin.site.register(Project, AllProjects)
 admin.site.register( MyProjects,myProject)
 admin.site.register(Ponds, AllPonds)
 admin.site.register(PondstoDoList, ToDoListP)
+
+class StockingAdmin(admin.ModelAdmin):
+    list_display = ['id', 'pondId', 'totalWeight',  'quantity', 'comments']
+
+admin.site.register(Stocking, StockingAdmin)
+
+
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'creatorId',  'City', 'comments']
+
+admin.site.register(Company, CompanyAdmin)
