@@ -24,7 +24,7 @@ class Authority(models.Model):
 class Staff(models.Model):
     userId = models.IntegerField(unique=True)
     companyId = models.IntegerField()
-    workPhone = models.CharField(max_length=100, unique=True) #option too select same as that in profile // avoid duplicates 
+    workPhone = models.CharField(max_length=100, unique=True) #option too select same as that in profile // avoid duplicates
     workEmail = models.EmailField(max_length=1000, null=True, unique=True) #option too select same as that in profile // avoid duplicates
     dataCreated = models.DateTimeField(default=datetime.now)
     joinedCompanyDate = models.DateTimeField(null=True) #only manager and higher with authority can add too this / only level 4 and above can edit wih permision from level 5

@@ -10,7 +10,7 @@ class AuthorityAdmin(admin.ModelAdmin):
 admin.site.register(Authority, AuthorityAdmin)
 
 class StaffAdmin(admin.ModelAdmin):
-    list_display = ['id', 'userId', 'companyId', 'workPhone', 
+    list_display = ['id', 'userId', 'companyId', 'workPhone',
                     'dataCreated','joinedCompanyDate', 'comments'
                 ]
 admin.site.register(Staff, StaffAdmin)
@@ -22,7 +22,7 @@ class StaffCurrentAdmin(admin.ModelAdmin):
 admin.site.register(StaffCurrent, StaffCurrentAdmin)
 
 class StaffOrgChartAdmin(admin.ModelAdmin):
-    list_display = ['id', 'staffId', 'bossId', 'startDate', 
+    list_display = ['id', 'staffId', 'bossId', 'startDate',
                     'endDate','status'
                 ]
 admin.site.register(StaffOrgChart, StaffOrgChartAdmin)
