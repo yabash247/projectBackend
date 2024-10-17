@@ -7,11 +7,11 @@ class Authority(models.Model):
     tableName = models.CharField(max_length=100)
     farmId = models.IntegerField(null=True)
     levels = [
-        (1, 'One'),
-        (2, 'Two'),
-        (3, 'Three'),
-        (4, 'Four'),
-        (5, 'Five'),
+        ('1', 'One'),
+        ('2', 'Two'),
+        ('3', 'Three'),
+        ('4', 'Four'),
+        ('5', 'Five'),
     ]
     view = models.CharField( max_length=1, choices=levels, default=5,)
     add = models.CharField( max_length=1, choices=levels, default=5,)
