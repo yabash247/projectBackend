@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+#from datetime import datetime
 
 # Create your models here.
 
@@ -8,7 +8,10 @@ class Batch(models.Model):
     farmId = models.IntegerField()
 
 class Laying(models.Model):
-    batchId = models.IntegerField()
+    batchId = models.ForeignKey(
+        Batch,
+        on_delete=models.CASCADE,
+    )
     netId = models.IntegerField()
     layingStart = models.DateTimeField()
     layingStartVideo = models.ImageField(upload_to="images", null=True)
@@ -70,7 +73,7 @@ class Incubator(models.Model):
     incubatorNumber = models.IntegerField()
 
 
-class Nursery(models.Model): 
+class Nursery(models.Model):
     batchId = models.IntegerField()
     nurseryId = models.IntegerField()
     nurseryStart = models.DateTimeField()
@@ -102,7 +105,7 @@ class NurseryPond(models.Model):
     nurseryNumber = models.IntegerField()
 
 
-class GrowOut(models.Model): 
+class GrowOut(models.Model):
     batchId = models.IntegerField()
     growOutId = models.IntegerField()
     growOutStart = models.DateTimeField()
@@ -134,7 +137,7 @@ class GrowOutPond(models.Model):
     growOutNumber = models.IntegerField()
 
 
-class Maturity(models.Model): 
+class Maturity(models.Model):
     batchId = models.IntegerField()
     maturityId = models.IntegerField()
     maturityStart = models.DateTimeField()

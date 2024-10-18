@@ -22,7 +22,8 @@ class StaffCurrentAdmin(admin.ModelAdmin):
 admin.site.register(StaffCurrent, StaffCurrentAdmin)
 
 class StaffOrgChartAdmin(admin.ModelAdmin):
-    list_display = ['id', 'staffId', 'bossId', 'startDate',
+    list_editable = ['creatorSaffId', 'approvalSaffId']
+    list_display = ['id', 'staffId', 'bossId', 'startDate', 'creatorSaffId', 'approvalSaffId',
                     'endDate','status'
                 ]
 admin.site.register(StaffOrgChart, StaffOrgChartAdmin)

@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from users.models import User
 
 # Create your models here.
 
@@ -22,13 +23,18 @@ class Authority(models.Model):
 
 
 class Staff(models.Model):
-    userId = models.IntegerField(unique=True)
+    userId = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
     companyId = models.IntegerField()
     workPhone = models.CharField(max_length=100, unique=True) #option too select same as that in profile // avoid duplicates
     workEmail = models.EmailField(max_length=1000, null=True, unique=True) #option too select same as that in profile // avoid duplicates
     dataCreated = models.DateTimeField(default=datetime.now)
     joinedCompanyDate = models.DateTimeField(null=True) #only manager and higher with authority can add too this / only level 4 and above can edit wih permision from level 5
     comments = models.CharField(max_length=2000, null=True)
+
+    USERNAME_FIELD = 'userId'
 
     #address = models.CharField(max_length=1000, null=True)
     #relationId = models.IntegerField(null=True)
@@ -37,6 +43,11 @@ class Staff(models.Model):
 
 class StaffCurrent(models.Model):
     staffId = models.IntegerField()
+    creatorSaffId = models.ForeignKey(
+        'Staff',
+        on_delete=models.CASCADE,
+    )
+    approvalSaffId = models.IntegerField(null=True)
     position = models.CharField(max_length=100)
     levels = [
         ('1', 'One'),
@@ -46,7 +57,7 @@ class StaffCurrent(models.Model):
         ('5', 'Five'),
     ]
     level = models.CharField( max_length=10, choices=levels, default=1,)
-    pay = models.DecimalField(max_digits=25, decimal_places=10)
+    pay = models.DecimalField(max_digits=25, decimal_places=3)
     farmId = models.IntegerField()
     stat = [
         ('A', 'Active'),
@@ -67,6 +78,8 @@ class StaffCurrent(models.Model):
 class StaffOrgChart(models.Model):
     staffId = models.IntegerField(null=True)
     bossId = models.IntegerField(null=True)
+    creatorSaffId = models.IntegerField(null=True)
+    approvalSaffId = models.IntegerField(null=True)
     startDate = models.DateTimeField(default=datetime.now)
     endDate = models.DateTimeField(null=True)
     stat = [
