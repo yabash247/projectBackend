@@ -73,8 +73,6 @@ class StaffCurrent(models.Model):
     eventOccuredDate = models.DateTimeField(default=datetime.now)
     comments = models.CharField(max_length=1000, null=True)
 
-
-
 class StaffOrgChart(models.Model):
     staffId = models.IntegerField(null=True)
     bossId = models.IntegerField(null=True)
@@ -87,3 +85,12 @@ class StaffOrgChart(models.Model):
         ('IA', 'InActive'),
     ]
     status = models.CharField( max_length=2, choices=stat, default='IA',)
+
+
+class item (models.Model):
+    tableName : models.IntegerField()
+
+
+# **** Expenses ****
+
+
