@@ -33,8 +33,6 @@ class Profile(models.Model):
     birthday = models.DateField(null=True)
     verified = models.BooleanField(default=False)
 
-
-
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
@@ -44,3 +42,7 @@ def save_user_profile(sender, instance, **kwargs):
 
 post_save.connect(create_user_profile, sender=User)
 post_save.connect(save_user_profile, sender=User)
+
+
+
+    

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'projects',
     'bsf',
     'fishfarm',
+    'general',
 
     # Third Party
     'rest_framework',
@@ -108,7 +109,7 @@ DATABASES = {
     }
 }
 
-
+'''
 
 
 DATABASES = {
@@ -121,8 +122,8 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-'''
 
+'''
 
 DATABASES = {
     'default': {
@@ -135,7 +136,7 @@ DATABASES = {
     }
 }
 
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

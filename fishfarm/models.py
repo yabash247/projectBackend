@@ -22,31 +22,46 @@ class Authority(models.Model):
     approve = models.CharField( max_length=1, choices=levels, default=5,)
 
 
+#branch of a company. such as a farm
+class Farm(models.Model):
+    name = models.CharField(max_length=100)
+    summary = models.CharField(max_length=1000, null=True)
+    companyId = models.IntegerField()
+    createdDate = models.DateField(default=datetime.now)
+    creatorId = models.IntegerField()
+    approverId = models.IntegerField()
+    ownerTypes = {
+        "User": "User",
+        "Staff": "Staff",
+        "Contacts": "Contacts"
+    }
+    ownerType = models.CharField(max_length=10, choices=ownerTypes) 
+    contactId = models.IntegerField()
+    addressId = models.IntegerField()
+    stat = [
+        ('A', 'Active'),
+        ('PA', 'pendingApproval'),
+        ('IA', 'InActive'),
+    ]
+    status = models.CharField( max_length=2, choices=stat, default='IA',)
+    comments = models.CharField(max_length=1000, null=True)
+
+
 class Staff(models.Model):
-    userId = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-    )
+    userId = models.IntegerField(default=0)
     companyId = models.IntegerField()
     workPhone = models.CharField(max_length=100, unique=True) #option too select same as that in profile // avoid duplicates
     workEmail = models.EmailField(max_length=1000, null=True, unique=True) #option too select same as that in profile // avoid duplicates
     dataCreated = models.DateTimeField(default=datetime.now)
     joinedCompanyDate = models.DateTimeField(null=True) #only manager and higher with authority can add too this / only level 4 and above can edit wih permision from level 5
     comments = models.CharField(max_length=2000, null=True)
-
-    USERNAME_FIELD = 'userId'
-
-    #address = models.CharField(max_length=1000, null=True)
-    #relationId = models.IntegerField(null=True)
-    #individualPaymentMethodTd
+    addedById = models.IntegerField()
+    approvedById = models.IntegerField()
 
 
 class StaffCurrent(models.Model):
-    staffId = models.IntegerField()
-    creatorSaffId = models.ForeignKey(
-        'Staff',
-        on_delete=models.CASCADE,
-    )
+    staffId = models.IntegerField(default=0)
+    creatorSaffId = models.IntegerField()
     approvalSaffId = models.IntegerField(null=True)
     position = models.CharField(max_length=100)
     levels = [
@@ -87,10 +102,18 @@ class StaffOrgChart(models.Model):
     status = models.CharField( max_length=2, choices=stat, default='IA',)
 
 
-class item (models.Model):
-    tableName : models.IntegerField()
+#class SecurityDog 
+
 
 
 # **** Expenses ****
+
+   # Dog Feed > dogProtient(fish stomach) > item 
+        # Thunder,Max,Smart > beneficairy 
+            #dogs
+                #security 
+                    #farm
+            # > beneficary parrents 
+
 
 
