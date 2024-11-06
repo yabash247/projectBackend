@@ -9,8 +9,8 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     paidMember = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def profile(self):
         profile = Profile.objects.get(user=self)
@@ -45,4 +45,4 @@ post_save.connect(save_user_profile, sender=User)
 
 
 
-    
+
