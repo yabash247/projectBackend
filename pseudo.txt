@@ -1,22 +1,32 @@
 
+****** Activities ******
+
+    Login
+    Change Password
+    update password
+
+    Water Change
+        Create Pond
+
+
 UPDATED NEEDED.
 
 ***use choiseType Enum in model and serializer. (Currently throwing error: type )
 ***Update Company need to send update asa an array and not indiviayally as a varriable. (check : views,py>companies>post )
 
-Company 
+Company
     a. Edit : only folks with authority can edit specific parts of company info.
-    b. delete : check if requester is authorized to delete company. On ocmpany delete need to delete other company related rows in other database table? 
+    b. delete : check if requester is authorized to delete company. On ocmpany delete need to delete other company related rows in other database table?
     c. add
 
-models : FishGroup, Buyer/Vendor Id, 
+models : FishGroup, Buyer/Vendor Id,
 
    dateSold
    amount
    unitPrice
    fishId
    buyerId
-   paid 
+   paid
    paymentBal
    projectId
    pondId
@@ -34,7 +44,7 @@ if request.method == 'PUT':
                     msg = {"msg" : "Task Has been sucessfully added ", "data" : PondTodo_Serializers.data}
                     return JsonResponse(msg)
                 else:
-                    return JsonResponse(PondTodo_Serializers.errors, status=status.HTTP_400_BAD_REQUEST)   
+                    return JsonResponse(PondTodo_Serializers.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
                 msg = {"msg" : "You are not authorized"}
                 return JsonResponse(msg, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
@@ -46,19 +56,19 @@ if request.method == 'PUT':
 
 
 
-Expenses 
+Expenses
     Dog Feeds
 
 
 
-    espenseID 
+    espenseID
     itemId
 
 
-    itemGrouping 
-        itemId,             itemParent 
+    itemGrouping
+        itemId,             itemParent
 
-        FishPurchase        
+        FishPurchase
 
 item
 
@@ -77,7 +87,7 @@ Sharp Sand - NGN105,000 - 4BUCKETS @15K per bucket - truck transport 45k, setlle
 
 
 
-Contact additional Models 
+Contact additional Models
 
 class Contacts(models.Model):
     userId = models.IntegerField(null=True)

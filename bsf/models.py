@@ -1,169 +1,153 @@
 from django.db import models
-#from datetime import datetime
+from datetime import datetime
 
-# Create your models here.
-
+#branch of a company. such as a farm
+class Farm(models.Model):
+    name = models.CharField(max_length=100)
+    summary = models.CharField(max_length=1000, null=True)
+    companyId = models.IntegerField()
+    createdDate = models.DateField(default=datetime.now)
+    creatorId = models.IntegerField()
+    approverId = models.IntegerField()
+    ownerTypes = {
+        "User": "User",
+        "Staff": "Staff",
+        "Contacts": "Contacts"
+    }
+    ownerType = models.CharField(max_length=10, choices=ownerTypes)
+    contactId = models.IntegerField()
+    addressId = models.IntegerField()
+    stat = [
+        ('A', 'Active'),
+        ('PA', 'pendingApproval'),
+        ('IA', 'InActive'),
+    ]
+    status = models.CharField( max_length=2, choices=stat, default='IA',)
+    comments = models.CharField(max_length=1000, null=True)
 
 class Batch(models.Model):
     farmId = models.IntegerField()
-
-class Laying(models.Model):
-    batchId = models.ForeignKey(
-        Batch,
-        on_delete=models.CASCADE,
-    )
-    netId = models.IntegerField()
-    layingStart = models.DateTimeField()
-    layingStartVideo = models.ImageField(upload_to="images", null=True)
-    layingMidVideo = models.ImageField(upload_to="images", null=True)
-    layingEnd = models.DateTimeField()
-    layingEndVideo = models.ImageField(upload_to="images", null=True)
-    harvest = models.DecimalField(max_digits=25, decimal_places=10)
-    harvestStat = [
-        ('IP', 'InProgress'),
-        ('C', 'Completed'),
-        ('D', 'Delayed')
-    ]
-    harveststatus = models.CharField( max_length=2, choices=harvestStat)
-    endResults= [
-        ('S', 'Satisfacory'),
-        ('G', 'Good'),
-        ('O', 'Ok'),
-        ('p', 'Poor'),
-        ('B', 'Bad')
-    ]
-    endResult = models.CharField( max_length=2, choices=endResults)
-    comment = models.CharField(max_length=1000, null=True)
-    leadId = models.IntegerField()
-    approverId = models.IntegerField()
 
 class Net(models.Model):
     farmId = models.IntegerField()
     netNumber = models.IntegerField()
 
-class Incubation(models.Model):
-    batchId = models.IntegerField()
-    incubatorId = models.IntegerField()
-    incubateStart = models.DateTimeField()
-    incubateStartVideo = models.ImageField(upload_to="images", null=True)
-    incubateMidVideo = models.ImageField(upload_to="images", null=True)
-    incubateEnd = models.DateTimeField()
-    incubateEndVideo = models.ImageField(upload_to="images", null=True)
-    harvest = models.DecimalField(max_digits=25, decimal_places=10)
-    harvestStat = [
-        ('IP', 'InProgress'),
-        ('C', 'Completed'),
-        ('D', 'Delayed')
+class NetStat(models.Model):
+    batchNumber = models.IntegerField()
+    netNumber = models.IntegerField()
+    stat= [
+        ('E', 'Empty'),
+        ('NR', 'Need Repair'),
+        ('IU', 'In USE'),
+        ('HC', 'Harvest Completed'),
+        ('NC', 'Need Cleaning')
     ]
-    harveststatus = models.CharField( max_length=2, choices=harvestStat)
-    endResults= [
-        ('S', 'Satisfacory'),
-        ('G', 'Good'),
-        ('O', 'Ok'),
-        ('p', 'Poor'),
-        ('B', 'Bad')
-    ]
-    endResult = models.CharField( max_length=2, choices=endResults)
-    comment = models.CharField(max_length=1000, null=True)
-    leadId = models.IntegerField()
-    approverId = models.IntegerField()
+    status = models.CharField( max_length=2, choices=stat)
+    eggiesSetDate = models.DateField()
+    eggiesRemovedDate = models.DateField()
+    eggiesHarvested = models.DecimalField(max_digits=5, decimal_places=2, default=0)#in grams
 
-class Incubator(models.Model):
+class Container(models.Model):
     farmId = models.IntegerField()
-    incubatorNumber = models.IntegerField()
+    containerName = models.CharField(max_length=100)
+    containerTypes = {
+        "CP": "Concrete Pond",
+        "PC": "Plastic Container",
+        "RT": "Rubber Tire",
+    }
+    containerType = models.CharField(max_length=5, choices=containerTypes)
+    containerUses = {
+        "I": "Incubator",
+        "N": "Nursery",
+        "GO": "Grow Out",
+        "M": "Mutiple",
+    }
+    containerUse = models.CharField(max_length=5, choices=containerUses, default='M')
 
-
-class Nursery(models.Model):
-    batchId = models.IntegerField()
-    nurseryId = models.IntegerField()
-    nurseryStart = models.DateTimeField()
-    nurseryStartVideo = models.ImageField(upload_to="images", null=True)
-    nurseryMidVideo = models.ImageField(upload_to="images", null=True)
-    nurseryEnd = models.DateTimeField()
-    nurseryEndVideo = models.ImageField(upload_to="images", null=True)
-    harvest = models.DecimalField(max_digits=25, decimal_places=10)
-    harvestStat = [
-        ('IP', 'InProgress'),
-        ('C', 'Completed'),
-        ('D', 'Delayed')
+class ContainerStat(models.Model):
+    batchNumber = models.IntegerField()
+    containerNumber = models.IntegerField()
+    stat= [
+        ('E', 'Empty'),
+        ('NR', 'Need Repair'),
+        ('IU', 'In USE'),
+        ('HC', 'Harvest Completed')
     ]
-    harveststatus = models.CharField( max_length=2, choices=harvestStat)
-    endResults= [
-        ('S', 'Satisfacory'),
-        ('G', 'Good'),
-        ('O', 'Ok'),
-        ('p', 'Poor'),
-        ('B', 'Bad')
+    status = models.CharField( max_length=2, choices=stat)
+    harveststages= [
+        ('1', 'First Insta'), #Eggies > Incubtion
+        ('2', 'Second Insta'), #Incubation > Nursery
+        ('5', 'Fifth Insta'), #Nursery > Growout
+        ('6', 'PrePupa'),
+        ('7', 'Pupa'),
+        ('0', 'N/A'),
     ]
-    endResult = models.CharField( max_length=2, choices=endResults)
-    comment = models.CharField(max_length=1000, null=True)
-    leadId = models.IntegerField()
-    approverId = models.IntegerField()
+    harveststage = models.CharField( max_length=2, choices=harveststages, default='0')
+    setDate = models.DateField(null=True)
+    removedDate = models.DateField(null=True)
+    harvestWeight = models.DecimalField(max_digits=5, decimal_places=2, default=0)#in grams
+    leadId = models.IntegerField(null=True)
+    approverId = models.IntegerField(null=True)
 
-class NurseryPond(models.Model):
+
+class StaffCurrent(models.Model):
+    staffId = models.IntegerField()
+    creatorSaffId = models.IntegerField(null=True)
+    approvalSaffId = models.IntegerField(null=True)
+    position = models.CharField(max_length=100)
+    levels = [
+        ('One', 1),
+        ('Two', 2),
+        ('Three', 3),
+        ('Four', 4),
+        ('Five', 5),
+    ]
+    level = models.CharField( max_length=5, choices=levels, default=1,)
+    pay = models.DecimalField(max_digits=3, decimal_places=3)
     farmId = models.IntegerField()
-    nurseryNumber = models.IntegerField()
-
-
-class GrowOut(models.Model):
-    batchId = models.IntegerField()
-    growOutId = models.IntegerField()
-    growOutStart = models.DateTimeField()
-    growOutStartVideo = models.ImageField(upload_to="images", null=True)
-    growOutMidVideo = models.ImageField(upload_to="images", null=True)
-    growOutEnd = models.DateTimeField()
-    growOutEndVideo = models.ImageField(upload_to="images", null=True)
-    harvest = models.DecimalField(max_digits=25, decimal_places=10)
-    harvestStat = [
-        ('IP', 'InProgress'),
-        ('C', 'Completed'),
-        ('D', 'Delayed')
+    stat = [
+        ('A', 'Active'),
+        ('F', 'Fired'),
+        ('R', 'Resigned'),
+        ('RT', 'Retired'),
+        ('OS', 'OfferSent'),
+        ('PA', 'pendingApproval'),
+        ('IA', 'InActive'),
     ]
-    harveststatus = models.CharField( max_length=2, choices=harvestStat)
-    endResults= [
-        ('S', 'Satisfacory'),
-        ('G', 'Good'),
-        ('O', 'Ok'),
-        ('p', 'Poor'),
-        ('B', 'Bad')
+    status = models.CharField( max_length=2, choices=stat, default='IA')
+    dataCreated = models.DateTimeField(default=datetime.now)
+    eventOccuredDate = models.DateTimeField(default=datetime.now)
+    comments = models.CharField(max_length=1000, null=True)
+
+
+class StaffOrgChart(models.Model):
+    staffId = models.IntegerField(null=True)
+    bossId = models.IntegerField(null=True)
+    creatorSaffId = models.IntegerField(null=True)
+    approvalSaffId = models.IntegerField(null=True)
+    startDate = models.DateTimeField(default=datetime.now)
+    endDate = models.DateTimeField(null=True)
+    stat = [
+        ('A', 'Active'),
+        ('IA', 'InActive'),
     ]
-    endResult = models.CharField( max_length=2, choices=endResults)
-    comment = models.CharField(max_length=1000, null=True)
-    leadId = models.IntegerField()
-    approverId = models.IntegerField()
+    status = models.CharField( max_length=2, choices=stat, default='IA')
 
-class GrowOutPond(models.Model):
-    farmId = models.IntegerField()
-    growOutNumber = models.IntegerField()
-
-
-class Maturity(models.Model):
-    batchId = models.IntegerField()
-    maturityId = models.IntegerField()
-    maturityStart = models.DateTimeField()
-    maturityStartVideo = models.ImageField(upload_to="images", null=True)
-    maturityMidVideo = models.ImageField(upload_to="images", null=True)
-    maturityEnd = models.DateTimeField()
-    maturityEndVideo = models.ImageField(upload_to="images", null=True)
-    harvest = models.DecimalField(max_digits=25, decimal_places=10)
-    harvestStat = [
-        ('IP', 'InProgress'),
-        ('C', 'Completed'),
-        ('D', 'Delayed')
+class Authority(models.Model):
+    tableName = models.CharField(max_length=100)
+    farmId = models.IntegerField(null=True)
+    levels = [
+        ('1', 'One'),
+        ('2', 'Two'),
+        ('3', 'Three'),
+        ('4', 'Four'),
+        ('5', 'Five'),
     ]
-    harveststatus = models.CharField( max_length=2, choices=harvestStat)
-    endResults= [
-        ('S', 'Satisfacory'),
-        ('G', 'Good'),
-        ('O', 'Ok'),
-        ('p', 'Poor'),
-        ('B', 'Bad')
-    ]
-    endResult = models.CharField( max_length=2, choices=endResults)
-    comment = models.CharField(max_length=1000, null=True)
-    leadId = models.IntegerField()
-    approverId = models.IntegerField()
+    view = models.CharField( max_length=1, choices=levels, default=5,)
+    add = models.CharField( max_length=1, choices=levels, default=5,)
+    edit = models.CharField( max_length=1, choices=levels, default=5,)
+    delete = models.CharField( max_length=1, choices=levels, default=5,)
+    accept = models.CharField( max_length=1, choices=levels, default=5,)
+    approve = models.CharField( max_length=1, choices=levels, default=5,)
 
-class MaturityPond(models.Model):
-    farmId = models.IntegerField()
-    maturityNumber = models.IntegerField()
+

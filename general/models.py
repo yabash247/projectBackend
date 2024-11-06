@@ -12,17 +12,16 @@ class Item(models.Model):
 class Purchase(models.Model):
     companyId = models.IntegerField() #Eg: Farm Id
     companyBranchId = models.IntegerField() #Eg: Farm Id
-    #itemTbId = models.IntegerField() #Eg FishFeed Table Id in item table
     itemTbId = models.IntegerField()
     itemId = models.IntegerField() #Eg fish batch Id
     unitCost = models.DecimalField(max_digits=20, decimal_places=2)
     quantity = models.DecimalField(max_digits=20, decimal_places=2)
     totalcost = models.IntegerField()
     expensesDate = models.DateTimeField()
-    paymentMethodId = models.IntegerField(null=True)
-    #vendor
+    paymentDetailsId = models.IntegerField(null=True)
+    #vendorId =
     media = models.CharField(max_length=4000, null=True) #Eg [Recipt /// ghhg.jpg] [delivey /// deliveringstuff.jpg]
-    comments = models.CharField(max_length=1000, null=True) # enter things like recipt or invoice number  / Items breakdown 
+    comments = models.CharField(max_length=1000, null=True) # enter things like recipt or invoice number  / Items breakdown
 
 class Vendor(models.Model):
     ownerTypes = {
@@ -31,7 +30,7 @@ class Vendor(models.Model):
         "Contacts": "Contacts",
         "Branch": "Branch"
     }
-    ownerType = models.CharField(max_length=10, choices=ownerTypes) 
+    ownerType = models.CharField(max_length=10, choices=ownerTypes)
     ownerId = models.IntegerField()
     creatorId = models.IntegerField()
     approverId = models.IntegerField()
@@ -50,17 +49,33 @@ class AML(models.Model):
 class FishFeed(models.Model):
     companyId = models.IntegerField() #Eg: Farm Id
     companyBranchId = models.IntegerField() #Eg: Farm Id
-    size = models.CharField(max_length=100)
-    brand = models.DecimalField(max_digits=20, decimal_places=2)
-    weight = models.DecimalField(max_digits=20, decimal_places=2)
-    weightUnits = {
+    sizes = {
+        0.5: "0.5mm",
+        0.8: "0.8mm",
+        1.5: "1.5mm",
+        2: "2mm",
+        3: "3mm",
+        4: "4mm",
+        6: "6mm",
+        9: "9mm",
+    }
+    size = models.DecimalField(max_digits=4, decimal_places=2, choices=sizes)
+    brands = {
+        "blc": "Blue Crown",
+        "eco": "Eco Float",
+        "cupen": "Cupen",
+    }
+    brand = models.CharField(max_length=10, choices=brands)
+    quantity = models.DecimalField(max_digits=20, decimal_places=2)
+    units = {
         "Kg": "Kg",
         "Ibs": "Pounds",
+        "Bag": "Bag",
     }
-    weightUnit = models.CharField(max_length=5, choices=weightUnits)
+    unit = models.CharField(max_length=5, choices=units)
     desc = models.CharField(max_length=500)
     comments = models.CharField(max_length=1000, null=True)
-    
+
 
 class DogFeedMaterial(models.Model):
     companyId = models.IntegerField() #Eg: Farm Id
@@ -82,7 +97,7 @@ class ItemBeneficiary(models.Model):
 
 class ItemGroup(models.Model):
     itemNumber = models.IntegerField()
-    itemParent = models.IntegerField()    
+    itemParent = models.IntegerField()
 
 class PaymentDetails(models.Model):
     PaymentMethodId =  models.IntegerField()
@@ -92,7 +107,7 @@ class PaymentDetails(models.Model):
     comments = models.CharField(max_length=1000, null=True)
 
 class PaymentMethod(models.Model):
-    ownerId = models.IntegerField() 
+    ownerId = models.IntegerField()
     paymentTypes = {
         "BankTransfer": "BT",
         "Zelle": "Zelle",
@@ -106,28 +121,28 @@ class PaymentMethod(models.Model):
         "Contacts": "Contacts",
         "Branch": "Branch"
     }
-    ownerType = models.CharField(max_length=10, choices=ownerTypes) 
-    
+    ownerType = models.CharField(max_length=10, choices=ownerTypes)
+
 class BankPaymentMethod(models.Model):
-    PaymentMethodId = models.IntegerField() 
+    PaymentMethodId = models.IntegerField()
     Fullname = models.CharField(max_length=1000)
-    models.DecimalField(max_digits=25, decimal_places=10) 
-    accountNumber = models.IntegerField() 
+    models.DecimalField(max_digits=25, decimal_places=10)
+    accountNumber = models.IntegerField()
     bankName = models.CharField(max_length=1000)
-    comments = models.CharField(max_length=1000) 
+    comments = models.CharField(max_length=1000)
 
 class ZellePaymentMethod(models.Model):
-    PaymentMethodId = models.IntegerField() 
+    PaymentMethodId = models.IntegerField()
     email_phone = models.CharField(max_length=1000)
     Fullname = models.CharField(max_length=1000)
     bankName = models.CharField(max_length=1000)
-    comments = models.CharField(max_length=1000) 
+    comments = models.CharField(max_length=1000)
 
 class CyptoPaymentMethod(models.Model):
-    PaymentMethodId = models.IntegerField() 
+    PaymentMethodId = models.IntegerField()
     address = models.CharField(max_length=1000)
     network = models.CharField(max_length=1000)
-    comments = models.CharField(max_length=1000) 
+    comments = models.CharField(max_length=1000)
 
 class Images(models.Model):
     tableName  = models.CharField(max_length=100)
@@ -143,7 +158,7 @@ class contacts(models.Model):
     dataCreated = models.DateTimeField(default=datetime.now)
     creatorId = models.IntegerField()
     approverId = models.IntegerField()
-    
+
 class Company(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
@@ -154,6 +169,17 @@ class Company(models.Model):
     website = models.CharField(max_length=100)
     comments = models.CharField(max_length=1000)
 
+class Staff(models.Model):
+    userId = models.IntegerField(default=0)
+    companyId = models.IntegerField()
+    #workPhone = models.CharField(max_length=100, unique=True) #option too select same as that in profile // avoid duplicates
+    #workEmail = models.EmailField(max_length=1000, null=True, unique=True) #option too select same as that in profile // avoid duplicates
+    dataCreated = models.DateTimeField(default=datetime.now)
+    joinedCompanyDate = models.DateTimeField(null=True) #only manager and higher with authority can add too this / only level 4 and above can edit wih permision from level 5
+    comments = models.CharField(max_length=2000, null=True)
+    addedById = models.IntegerField()
+    approvedById = models.IntegerField()
+
 class RelationshipLink(models.Model):
     ownerTypes = {
         "Company": "Company",
@@ -161,13 +187,13 @@ class RelationshipLink(models.Model):
         "Contacts": "Contacts",
         "Branch": "Branch"
     }
-    ownerType = models.CharField(max_length=10, choices=ownerTypes) 
+    ownerType = models.CharField(max_length=10, choices=ownerTypes)
     ownerId = models.IntegerField()
     relationTypes = {
         "User": "User",
         "Contacts": "Contacts",
     }
-    relationType = models.CharField(max_length=10, choices=relationTypes) 
+    relationType = models.CharField(max_length=10, choices=relationTypes)
     relationId = models.IntegerField()
     relationDetails = models.CharField(max_length=1000)
     addedById = models.IntegerField()
@@ -194,7 +220,8 @@ class Address(models.Model):
 class Authority(models.Model):
     tableName = models.CharField(max_length=100)
     companyId = models.IntegerField(null=True)
-    branchId = models.IntegerField(null=True)
+    requestedId = models.IntegerField()
+    approverId = models.IntegerField()
     levels = [
         ('1', 'One'),
         ('2', 'Two'),
@@ -208,3 +235,4 @@ class Authority(models.Model):
     delete = models.CharField( max_length=1, choices=levels, default=5,)
     accept = models.CharField( max_length=1, choices=levels, default=5,)
     approve = models.CharField( max_length=1, choices=levels, default=5,)
+    authorityGranted = models.DateTimeField(default=datetime.now)

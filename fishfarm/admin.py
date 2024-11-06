@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Authority, Farm, Staff, StaffCurrent, StaffOrgChart
+from .models import Authority, Farm, StaffCurrent, StaffOrgChart
 
 class AuthorityAdmin(admin.ModelAdmin):
     list_display = ['id', 'tableName', 'farmId', 'view', 'add', 'edit',
@@ -14,12 +14,6 @@ class FarmAdmin(admin.ModelAdmin):
                     'createdDate', 'contactId', 'ownerType', 'addressId', 'comments'
                 ]
 admin.site.register(Farm, FarmAdmin)
-
-class StaffAdmin(admin.ModelAdmin):
-    list_display = ['id', 'userId', 'addedById', 'approvedById', 'companyId', 'workPhone',
-                    'dataCreated','joinedCompanyDate', 'comments'
-                ]
-admin.site.register(Staff, StaffAdmin)
 
 class StaffCurrentAdmin(admin.ModelAdmin):
     list_display = ['id', 'staffId', 'position', 'level', 'pay',

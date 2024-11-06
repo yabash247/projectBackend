@@ -35,7 +35,7 @@ class Farm(models.Model):
         "Staff": "Staff",
         "Contacts": "Contacts"
     }
-    ownerType = models.CharField(max_length=10, choices=ownerTypes) 
+    ownerType = models.CharField(max_length=10, choices=ownerTypes)
     contactId = models.IntegerField()
     addressId = models.IntegerField()
     stat = [
@@ -47,20 +47,8 @@ class Farm(models.Model):
     comments = models.CharField(max_length=1000, null=True)
 
 
-class Staff(models.Model):
-    userId = models.IntegerField(default=0)
-    companyId = models.IntegerField()
-    workPhone = models.CharField(max_length=100, unique=True) #option too select same as that in profile // avoid duplicates
-    workEmail = models.EmailField(max_length=1000, null=True, unique=True) #option too select same as that in profile // avoid duplicates
-    dataCreated = models.DateTimeField(default=datetime.now)
-    joinedCompanyDate = models.DateTimeField(null=True) #only manager and higher with authority can add too this / only level 4 and above can edit wih permision from level 5
-    comments = models.CharField(max_length=2000, null=True)
-    addedById = models.IntegerField()
-    approvedById = models.IntegerField()
-
-
 class StaffCurrent(models.Model):
-    staffId = models.IntegerField(default=0)
+    staffId = models.IntegerField()
     creatorSaffId = models.IntegerField()
     approvalSaffId = models.IntegerField(null=True)
     position = models.CharField(max_length=100)
@@ -88,6 +76,9 @@ class StaffCurrent(models.Model):
     eventOccuredDate = models.DateTimeField(default=datetime.now)
     comments = models.CharField(max_length=1000, null=True)
 
+
+
+
 class StaffOrgChart(models.Model):
     staffId = models.IntegerField(null=True)
     bossId = models.IntegerField(null=True)
@@ -102,18 +93,38 @@ class StaffOrgChart(models.Model):
     status = models.CharField( max_length=2, choices=stat, default='IA',)
 
 
-#class SecurityDog 
+class Ponds(models.Model):
+    name = models.CharField(max_length=100)
+    farmId = models.IntegerField()
+    materialTypes = [
+        ('EP', 'Earthen Pond'),
+        ('CP', 'Concrete Pond'),
+        ('TP', 'Tampoline Pond'),
+        ('PP', 'Plastic Pond'),
+    ]
+    materialType = models.CharField( max_length=3, choices=materialTypes)
+    units = {
+        "FT": "Feet",
+        "MT": "Meter",
+    }
+    UOM = models.CharField(max_length=3, choices=units)
+    depth = models.IntegerField()
+    lenght = models.IntegerField()
+    width = models.IntegerField()
+
+
+#class SecurityDog
 
 
 
 # **** Expenses ****
 
-   # Dog Feed > dogProtient(fish stomach) > item 
-        # Thunder,Max,Smart > beneficairy 
+   # Dog Feed > dogProtient(fish stomach) > item
+        # Thunder,Max,Smart > beneficairy
             #dogs
-                #security 
+                #security
                     #farm
-            # > beneficary parrents 
+            # > beneficary parrents
 
 
 

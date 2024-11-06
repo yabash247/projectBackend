@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Item, Purchase, Vendor, AML, FishFeed, DogFeedMaterial, ItemBeneficiary, ItemGroup, PaymentDetails, PaymentMethod, contacts, Company, RelationshipLink, Address, Authority
+from .models import Item, Purchase, Vendor, AML, FishFeed, DogFeedMaterial, ItemBeneficiary, ItemGroup, PaymentDetails, PaymentMethod, contacts, Company, Staff, RelationshipLink, Address, Authority
 
 class ItemAdmin(admin.ModelAdmin):
     #list_editable = ['dbName']
@@ -25,7 +25,7 @@ class AMLAdmin(admin.ModelAdmin):
 admin.site.register(AML, AMLAdmin)
 
 class FishFeedAdmin(admin.ModelAdmin):
-    list_display = ['id', 'size', 'brand', 'weight', 'desc']
+    list_display = ['id', 'size', 'brand', 'unit', 'desc']
 admin.site.register(FishFeed, FishFeedAdmin)
 
 class DogFeedMaterialAdmin(admin.ModelAdmin):
@@ -62,6 +62,13 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'description', 'website', 'comments']
 admin.site.register(Company, CompanyAdmin)
 
+class StaffAdmin(admin.ModelAdmin):
+    #list_editable = ['userId', 'addedById', 'approvedById','companyId' ]
+    list_display = ['id', 'userId', 'addedById', 'approvedById', 'companyId',
+                    'dataCreated','joinedCompanyDate', 'comments'
+                ]
+admin.site.register(Staff, StaffAdmin)
+
 class RelationshipLinkAdmin(admin.ModelAdmin):
     list_display = ['id', 'ownerType', 'ownerId', 'relationType', 'relationId']
 admin.site.register(RelationshipLink, RelationshipLinkAdmin)
@@ -71,7 +78,7 @@ class AddressAdmin(admin.ModelAdmin):
 admin.site.register(Address, AddressAdmin)
 
 class AuthorityAdmin(admin.ModelAdmin):
-    list_display = ['id', 'tableName', 'view', 'add', 'edit',
+    list_display = ['id', 'tableName', 'companyId', 'requestedId', 'approverId', 'view', 'add', 'edit',
                     'delete','accept', 'approve'
                 ]
 admin.site.register(Authority, AuthorityAdmin)
